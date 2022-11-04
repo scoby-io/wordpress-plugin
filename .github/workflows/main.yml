@@ -20,6 +20,8 @@ jobs:
           npm install
           composer install
           composer release
+          mkdir scoby-analytics && cd scoby-analytics && unzip ../scoby-analytics.zip && cd .. \
+            && rm scoby-analytics.zip && zip -r scoby-analytics.zip scoby-analytics
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "scoby-analytics.zip"
