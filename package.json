@@ -1,0 +1,41 @@
+{
+  "name": "scoby-analytics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "wp-scripts start",
+    "build": "wp-scripts build",
+    "check-engines": "wp-scripts check-engines",
+    "check-licenses": "wp-scripts check-licenses",
+    "format": "wp-scripts format",
+    "lint:css": "wp-scripts lint-style ./assets/src/styles",
+    "lint:js": "wp-scripts lint-js ./assets/src",
+    "lint:md:docs": "wp-scripts lint-md-docs",
+    "lint:pkg-json": "wp-scripts lint-pkg-json",
+    "packages-update": "wp-scripts packages-update",
+    "plugin-zip": "wp-scripts plugin-zip",
+    "postinstall": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scobyio/analytics-wp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scobyio/analytics-wp/issues"
+  },
+  "homepage": "https://github.com/scobyio/analytics-wp#readme",
+  "dependencies": {
+    "@wordpress/scripts": "^24.4.0"
+  },
+  "files": [
+    "src/",
+    "plugin-update-checker",
+    "scoby-analytics.php",
+    "vendor",
+    "settings.php"
+  ]
+}

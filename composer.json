@@ -1,0 +1,19 @@
+{
+  "name": "scoby/wordpress",
+  "type": "library",
+  "require": {
+    "scoby/analytics": "0.3.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "ScobyAnalytics\\": "src/"
+    }
+  },
+  "minimum-stability": "stable",
+  "require-dev": {
+    "psr/log": "^1.1"
+  },
+  "scripts": {
+    "release": "composer install --no-dev && composer dumpautoload -o && npm run plugin-zip"
+  }
+}
