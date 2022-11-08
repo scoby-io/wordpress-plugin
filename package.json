@@ -1,6 +1,6 @@
 {
   "name": "scoby-analytics",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,8 @@
     "lint:pkg-json": "wp-scripts lint-pkg-json",
     "packages-update": "wp-scripts packages-update",
     "plugin-zip": "wp-scripts plugin-zip",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -29,13 +30,15 @@
   },
   "homepage": "https://github.com/scobyio/analytics-wp#readme",
   "dependencies": {
-    "@wordpress/scripts": "^24.4.0"
+    "@wordpress/scripts": "^24.4.0",
+    "standard-version": "^9.5.0"
   },
   "files": [
-    "src/",
+    "src",
+    "vendor",
     "plugin-update-checker",
     "scoby-analytics.php",
-    "vendor",
-    "settings.php"
+    "settings.php",
+    "readme.txt"
   ]
 }
