@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Get the tag version
         id: get_version
-        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_OUTPUT
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/}" >> $GITHUB_OUTPUT
       - name: Checkout
         uses: actions/checkout@master
         with:
