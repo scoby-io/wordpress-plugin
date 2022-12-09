@@ -70,7 +70,21 @@ if (empty($options['jar_id'])) {
 		</div>
         <?php
     });
+} else {
+    add_action('admin_notices', function () {
+        $cachePlugin = get_transient('scoby_analytics_flush_cache_notice');
+        if(!empty($cachePlugin)) {
+            ?>
+            <div class="notice-warning notice">
+                <p><?php _e('Scoby Analytics has detected you are using the <b>'.$cachePlugin.'</b> Plugin. Please flush your cache to start measuring.', 'my_plugin_textdomain'); ?></p>
+            </div>
+            <?php
+            delete_transient('scoby_analytics_flush_cache_notice');
+        }
+    });
 }
+
+
 
 
 function add_action_links($actions)
