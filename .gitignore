@@ -1,3 +1,4 @@
+/deps/
 /vendor/
 /node_modules/
 *.zip

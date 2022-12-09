@@ -35,10 +35,12 @@
   },
   "files": [
     "src",
+    "deps",
     "vendor",
     "plugin-update-checker",
     "scoby-analytics.php",
     "settings.php",
+    "update.php",
     "readme.txt"
   ]
 }

@@ -8,14 +8,21 @@ Author URI: https://www.scoby.io
 Requires PHP:    7.4
 */
 
+
 defined('ABSPATH') or die('I can only run in Wordpress.');
 define('MIN_PHP_VERSION', '7.4');
-define('PLUGIN_ROOT', plugin_dir_path(__FILE__));
+if(!defined('SCOBY_ANALYTICS_PLUGIN_ROOT')) {
+    define('SCOBY_ANALYTICS_PLUGIN_ROOT', plugin_dir_path(__FILE__));
+}
 
-$libs = require PLUGIN_ROOT . 'vendor/autoload.php';
-require_once PLUGIN_ROOT . 'settings.php';
+require_once __DIR__ . '/deps/scoper-autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
+
+require_once SCOBY_ANALYTICS_PLUGIN_ROOT . 'settings.php';
+require SCOBY_ANALYTICS_PLUGIN_ROOT . 'plugin-update-checker/plugin-update-checker.php';
 
 use ScobyAnalytics\Plugin;
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 if (version_compare(PHP_VERSION, MIN_PHP_VERSION, '<=')) {
     add_action(
@@ -40,12 +47,15 @@ if (version_compare(PHP_VERSION, MIN_PHP_VERSION, '<=')) {
     return;
 }
 
+$plugin = new Plugin();
+
+register_activation_hook(__FILE__, array($plugin, 'activate'));
+register_deactivation_hook(__FILE__, array($plugin, 'deactivate'));
 
 if (!wp_installing()) {
     add_action(
         'plugins_loaded',
-        static function () use ($libs) {
-            $plugin = new Plugin();
+        static function () use ($plugin) {
             $plugin->initialize();
         }
     );
@@ -74,9 +84,6 @@ function add_action_links($actions)
 
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'add_action_links');
 
-
-require PLUGIN_ROOT . 'plugin-update-checker/plugin-update-checker.php';
-use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $myUpdateChecker = PucFactory::buildUpdateChecker(
     'https://github.com/scobyio/wordpress-plugin/',
