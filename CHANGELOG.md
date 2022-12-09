@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/scobyio/analytics-wp/compare/v1.0.5...v1.2.0) (2022-12-09)
+
+
+### Features
+
+* add 1st party tracking privacy proxy ([8d13f00](https://github.com/scobyio/analytics-wp/commit/8d13f0065cbb71da12dcc2a3dff65cb75d45a7ef))
+* add 1st party tracking privacy proxy ([2f87b5e](https://github.com/scobyio/analytics-wp/commit/2f87b5eb4bcaa249385ecbe01f1df864fa1f79de))
+* detect cache plugins and adapt config automatically ([316cad0](https://github.com/scobyio/analytics-wp/commit/316cad004a87ad81a519f8fee520b66f776b80d1))
+
 ## [1.1.0](https://github.com/scobyio/analytics-wp/compare/v1.0.5...v1.1.0) (2022-12-09)
 
 
