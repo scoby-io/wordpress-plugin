@@ -2,7 +2,7 @@
 
 namespace ScobyAnalytics;
 
-use Psr\Log\LoggerInterface;
+use ScobyAnalyticsDeps\Psr\Log\LoggerInterface;
 
 class Logger implements LoggerInterface
 {
