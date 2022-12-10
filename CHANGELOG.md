@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/scobyio/analytics-wp/compare/v1.2.0...v1.3.0) (2022-12-10)
+
+
+### Features
+
+* auto configure plugin ([cfad439](https://github.com/scobyio/analytics-wp/commit/cfad4397ad80e9fb35f11dc8a747dc186ebef7f8))
+
 ## [1.2.0](https://github.com/scobyio/analytics-wp/compare/v1.0.5...v1.2.0) (2022-12-09)
 
 
