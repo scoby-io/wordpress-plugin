@@ -2,27 +2,13 @@
 /**
  * Plugin Name: Scoby Analytics Privacy Proxy
  * Description: Preserves your visitors' privacy when using scoby analytics' client-side integration.
- * Author: scoby UG (haftungsbeschränkt)
+ * Author: scoby UG
  * Version: 1.0
  * Author URI: https://scoby.io
  */
 
 use ScobyAnalytics\Logger;
 use ScobyAnalyticsDeps\Scoby\Analytics\Client;
-
-require join(DIRECTORY_SEPARATOR,  array(
-    WP_PLUGIN_DIR,
-    'scoby-analytics',
-    'vendor',
-    'autoload.php'
-));
-
-require join(DIRECTORY_SEPARATOR,  array(
-    WP_PLUGIN_DIR,
-    'scoby-analytics',
-    'deps',
-    'scoper-autoload.php'
-));
 
 $settings = get_option('scoby_analytics_options');
 
@@ -33,6 +19,21 @@ $path = explode("?", $_SERVER['REQUEST_URI'])[0];
 if($proxyEnabled === false || $proxyEndpoint === null || $path !== $proxyEndpoint) {
     return;
 }
+
+$pluginDir = $settings['plugin_dir'];
+
+require join(DIRECTORY_SEPARATOR,  array(
+    $pluginDir,
+    'vendor',
+    'autoload.php'
+));
+
+require join(DIRECTORY_SEPARATOR,  array(
+    $pluginDir,
+    'deps',
+    'scoper-autoload.php'
+));
+
 
 $content = trim(file_get_contents("php://input"));
 $data = json_decode($content, true);

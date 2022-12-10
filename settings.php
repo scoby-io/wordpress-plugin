@@ -1,5 +1,7 @@
 <?php
 
+use ScobyAnalytics\Helpers;
+use ScobyAnalytics\IntegrationType;
 use ScobyAnalyticsDeps\Scoby\Analytics\Client;
 
 require_once __DIR__ . '/deps/scoper-autoload.php';
@@ -34,7 +36,6 @@ function scoby_analytics_render_settings_page()
         <form action="options.php" method="post">
             <?php
             settings_fields('scoby_analytics_options');
-    //        settings_fields('scoby_analytics_advaced_options');
             do_settings_sections('scoby_analytics'); ?>
             <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e('Save Settings'); ?>"/>
         </form>
@@ -111,6 +112,10 @@ function scoby_analytics_options_validate($input)
         $newinput['proxy_endpoint'] = $input['proxy_endpoint'];
     }
 
+    $newinput['manual_config'] = true;
+
+    set_transient('scoby_analytics_check_config', true);
+
     return $newinput;
 }
 
@@ -146,22 +151,30 @@ function scoby_analytics_setting_logging_enabled()
 function scoby_analytics_setting_integration_type()
 {
     $options = get_option('scoby_analytics_options', []);
-    $integrationType = !empty($options['integration_type']) ? $options['integration_type'] : $defaultIntegrationType;
+    $integrationType = !empty($options['integration_type']) ? $options['integration_type'] : IntegrationType::detect();
     echo "<select id='scoby_analytics_setting_integration_type' name='scoby_analytics_options[integration_type]' >
-    <option value='SERVER' ".($integrationType === 'SERVER' ? 'selected' : '').">Standard (default)</option>    
+    <option value='SERVER' ".($integrationType === 'SERVER' ? 'selected' : '').">Standard</option>    
     <option value='CLIENT' ".($integrationType === 'CLIENT' ? 'selected' : '').">Cache-Optimized</option>    
 </select>
 <input type='hidden' name='scoby_analytics_options[endpoint]' value=''>
 ";
-    echo '<p>If you are using a Cache Plugin (such as WP Rocket, Fastest Cache, Super Cache etc.) <br>
-             to speed up your installation, we recommend to switch to "Cache-Optimized" integration. <br>
-             Otherwise you can safely use our Standard integration.</p>';
+    $cachePlugin = Helpers::getInstalledCachePlugin();
+    if($cachePlugin) {
+        echo '<p>We detected the '.$cachePlugin.' Plugin and recommend to use our Cache-Optimized Integration Type. <br>
+                 Our Standard integration type requires each page view to be served by your wordpress installation<br>
+                 Please only use our Standard integration if you know what you are doing.</p>';
+    } else {
+        echo '<p>We did not detect any Cache Plugin such as WP Rocket, Fastest Cache, Super Cache etc), so we assume <br>
+                 you can safely use our Standard integration. If you render your pages to a CDN or facilitate some other <br>
+                 cache in front of your wordpress installation, please switch to Cache-Optimized integration.</p>';
+    }
+
 }
 
 function scoby_analytics_setting_endpoint()
 {
     $options = get_option('scoby_analytics_options', []);
-    $endpoint = !empty($options['proxy_endpoint']) ? $options['proxy_endpoint'] : substr(str_shuffle(MD5(microtime())), 0, 6);
+    $endpoint = !empty($options['proxy_endpoint']) ? $options['proxy_endpoint'] : Helpers::generateProxyEndpoint();
     echo "<input type='text' name='scoby_analytics_options[proxy_endpoint]' value='".$endpoint."'>";
 
     echo '<p>When using Cache-Optimized integration, your traffic is routed through this path. <br>

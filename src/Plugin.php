@@ -59,62 +59,14 @@ SCRIPT_CODE;
         return get_option('scoby_analytics_options');
     }
 
-    private function getProxySource() {
-        return join(DIRECTORY_SEPARATOR, array(
-            __DIR__,
-            'privacy-proxy.php'
-        ));
-    }
-
-    private function getProxyTarget() {
-        return join(DIRECTORY_SEPARATOR, array(
-            WPMU_PLUGIN_DIR,
-            'scoby-analytics-privacy-proxy.php'
-        ));
-    }
-
-    public function hasCachePluginInstalled() {
-
-        if ( ! function_exists( 'get_plugins' ) ) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
-        foreach (\get_plugins() as $plugin) {
-            if(substr_count(strtolower($plugin['Name']), 'cache') > 0) {
-                return $plugin['Name'];
-            }
-        }
-        return false;
-    }
-
     public function activate()
     {
-        if(!is_dir(WPMU_PLUGIN_DIR)) {
-            mkdir(WPMU_PLUGIN_DIR);
-        }
-
-        copy($this->getProxySource(), $this->getProxyTarget());
-        $this->autoConfig();
-    }
-
-    private function autoConfig() {
-
-        $settings = get_option('scoby_analytics_options', []);
-
-        if(empty($settings['integration_type'])) {
-            $cachePlugin = $this->hasCachePluginInstalled();
-            $integrationType = $cachePlugin ? IntegrationType::$CLIENT : IntegrationType::$SERVER;
-            $settings['integration_type'] = $integrationType;
-            $settings['proxy_endpoint'] = substr(str_shuffle(MD5(microtime())), 0, 6);
-            update_option('scoby_analytics_options', $settings);
-            set_transient('scoby_analytics_flush_cache_notice', $cachePlugin);
-        }
+        \ScobyAnalytics\Helpers::autoConfigure();
+        \ScobyAnalytics\Helpers::installPrivacyProxy();
     }
 
     public function deactivate()
     {
-        $target = $this->getProxyTarget();
-        if(file_exists($target)) {
-            unlink($this->getProxyTarget());
-        }
+        \ScobyAnalytics\Helpers::uninstallPrivacyProxy();
     }
 }
