@@ -100,15 +100,15 @@ function scoby_analytics_options_validate($input)
         }
     }
 
-    if(isset($input['logging_enabled'])) {
+    if(!empty($input['logging_enabled'])) {
         $newinput['logging_enabled'] = $input['logging_enabled'] === 'yes';
     }
 
-    if(isset($input['integration_type'])) {
+    if(!empty($input['integration_type'])) {
         $newinput['integration_type'] = $input['integration_type'];
     }
 
-    if(isset($input['proxy_endpoint'])) {
+    if(!empty($input['proxy_endpoint'])) {
         $newinput['proxy_endpoint'] = $input['proxy_endpoint'];
     }
 
