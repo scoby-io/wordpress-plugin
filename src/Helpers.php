@@ -54,12 +54,12 @@ class Helpers {
         $settings = get_option('scoby_analytics_options', []);
 
         $cachePlugin = self::getInstalledCachePlugin();
-        if($settings['integration_type'] === IntegrationType::$CLIENT && $cachePlugin) {
+        if(!empty($settings['integration_type']) && $settings['integration_type'] === IntegrationType::$CLIENT && $cachePlugin) {
             set_transient('scoby_analytics_flush_cache_notice', $cachePlugin);
         }
 
         $cachePlugin = self::getInstalledCachePlugin();
-        if($settings['integration_type'] === IntegrationType::$SERVER && $cachePlugin) {
+        if(!empty($settings['integration_type']) && $settings['integration_type'] === IntegrationType::$SERVER && $cachePlugin) {
             set_transient('scoby_analytics_use_client_integration', $cachePlugin);
         }
     }
