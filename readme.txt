@@ -4,7 +4,7 @@ Donate link: https://www.scoby.io/
 Tags: traffic statistics, visitor statistics, traffic, stats, statistics, measurement, tracking
 Requires at least: 4.7
 Tested up to: 6.1
-Stable tag: 1.3.1-4-3-2-1-0
+Stable tag: 1.3.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
