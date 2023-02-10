@@ -69,7 +69,7 @@ if(getActiveTab() === 'advanced') {
 
 function scoby_analytics_options_validate($input)
 {
-    $newinput = get_option('scoby_analytics_options', []);
+    $newinput = Helpers::getConfig();
 
     if(!empty($input['jar_id'])) {
 
@@ -140,7 +140,7 @@ function scoby_analytics_setting_jar_id()
 
 function scoby_analytics_setting_logging_enabled()
 {
-    $options = get_option('scoby_analytics_options', []);
+    $options = Helpers::getConfig();
     $loggingEnabled = !empty($options['logging_enabled']) ? $options['logging_enabled'] : false;
     $checked = $loggingEnabled === true ? 'checked' : '';
     echo "<input type='checkbox' id='scoby_analytics_setting_logging_enabled' name='scoby_analytics_options[logging_enabled]' value='yes' " . $checked . " />";
@@ -150,7 +150,7 @@ function scoby_analytics_setting_logging_enabled()
 
 function scoby_analytics_setting_integration_type()
 {
-    $options = get_option('scoby_analytics_options', []);
+    $options = Helpers::getConfig();
     $integrationType = !empty($options['integration_type']) ? $options['integration_type'] : IntegrationType::detect();
     echo "<select id='scoby_analytics_setting_integration_type' name='scoby_analytics_options[integration_type]' >
     <option value='SERVER' ".($integrationType === 'SERVER' ? 'selected' : '').">Standard</option>    
@@ -173,7 +173,7 @@ function scoby_analytics_setting_integration_type()
 
 function scoby_analytics_setting_endpoint()
 {
-    $options = get_option('scoby_analytics_options', []);
+    $options = Helpers::getConfig();
     $endpoint = !empty($options['proxy_endpoint']) ? $options['proxy_endpoint'] : Helpers::generateProxyEndpoint();
     echo "<input type='text' name='scoby_analytics_options[proxy_endpoint]' value='".$endpoint."'>";
 

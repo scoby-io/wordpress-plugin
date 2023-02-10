@@ -32,7 +32,7 @@ class Helpers {
     }
 
     public static function autoConfigure() {
-        $settings = get_option('scoby_analytics_options', []);
+        $settings = self::getConfig();
 
         // privacy proxy needs this when plugin is installed in funky path
         $settings['plugin_dir'] = SCOBY_ANALYTICS_PLUGIN_ROOT;
@@ -50,8 +50,18 @@ class Helpers {
         set_transient('scoby_analytics_check_config', true);
     }
 
-    public static function checkConfig() {
+    public static function getConfig() {
         $settings = get_option('scoby_analytics_options', []);
+
+        if(!is_array($settings)) {
+            return [];
+        }
+
+        return $settings;
+    }
+
+    public static function checkConfig() {
+        $settings = self::getConfig();
 
         $cachePlugin = self::getInstalledCachePlugin();
         if(!empty($settings['integration_type']) && $settings['integration_type'] === IntegrationType::$CLIENT && $cachePlugin) {
