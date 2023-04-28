@@ -2,7 +2,7 @@
 /*
 Plugin Name: Scoby Analytics
 Description: Scoby Analytics provides meaningful insights about your websites traffic while protecting your visitors privacy at the same time. Scoby uses no cookies, does not access the end user's device, nor gathers any other personally identifiable information - we only collect anonymous data directly on your web server. Thus Scoby Analytics requires no consent regarding GDPR, ePrivacy, and Schrems II.
-Version: 1.3.3
+Version: 2.0.0
 Author: scoby GmbH
 Author URI: https://www.scoby.io
 Requires PHP:    7.4
