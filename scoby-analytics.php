@@ -2,8 +2,8 @@
 /*
 Plugin Name: Scoby Analytics
 Description: Scoby Analytics provides meaningful insights about your websites traffic while protecting your visitors privacy at the same time. Scoby uses no cookies, does not access the end user's device, nor gathers any other personally identifiable information - we only collect anonymous data directly on your web server. Thus Scoby Analytics requires no consent regarding GDPR, ePrivacy, and Schrems II.
-Version: 1.3.2
-Author: scoby UG
+Version: 1.3.3
+Author: scoby GmbH
 Author URI: https://www.scoby.io
 Requires PHP:    7.4
 */
@@ -73,12 +73,12 @@ if (!wp_installing()) {
     );
 }
 
-$options = get_option('scoby_analytics_options');
-if (empty($options['jar_id'])) {
+$options = \ScobyAnalytics\Helpers::getConfig();
+if (empty($options['api_key'])) {
     add_action('admin_notices', function () {
         ?>
-		<div class="error notice">
-			<p><?php _e('Scoby Analytics will only measure your traffic, once you have entered your Jar ID in the <a href="' . admin_url('options-general.php?page=scoby-analytics-plugin') . '">Plugin\'s Settings</a>.', 'my_plugin_textdomain'); ?></p>
+		<div class="notice-warning notice">
+			<p><?php _e('scoby analytics will measure your traffic, as soon as you have entered your API Key in the <a href="' . admin_url('options-general.php?page=scoby-analytics-plugin') . '">Plugin\'s Settings</a>.', 'my_plugin_textdomain'); ?></p>
 		</div>
         <?php
     });

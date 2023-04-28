@@ -28,10 +28,19 @@ class Helpers {
     }
 
     public static function generateProxyEndpoint() {
-        return substr(str_shuffle(MD5(microtime())), 0, 6);
+        return self::generateRandomString(6);
     }
 
-    public static function autoConfigure() {
+    public static function generateSalt() {
+        return self::generateRandomString(32);
+    }
+
+    private static function generateRandomString($length) {
+        return substr(str_shuffle(MD5(microtime())), 0, $length);
+    }
+
+    public static function autoConfigure()
+    {
         $settings = self::getConfig();
 
         // privacy proxy needs this when plugin is installed in funky path
@@ -45,7 +54,20 @@ class Helpers {
             }
         }
 
-        update_option('scoby_analytics_options', $settings);
+        // migrate jar_id to api_key
+        if (empty($settings['api_key'])) {
+            if (!empty($settings['jar_id'])) {
+                $jarId = $settings['jar_id'];
+                $settings['api_key'] = base64_encode($jarId . "|" . md5(self::generateSalt()));
+                unset($settings['jar_id']);
+            }
+        }
+
+        if(empty($settings['salt'])) {
+            $settings['salt'] = self::generateSalt();
+        }
+
+        self::setConfig($settings);
 
         set_transient('scoby_analytics_check_config', true);
     }
@@ -60,18 +82,30 @@ class Helpers {
         return $settings;
     }
 
+    public static function setConfig($config) {
+        update_option('scoby_analytics_options', $config);
+    }
+
+    public static function resetConfig() {
+        delete_option('scoby_analytics_options');
+    }
+
     public static function checkConfig() {
         $settings = self::getConfig();
 
         $cachePlugin = self::getInstalledCachePlugin();
         if(!empty($settings['integration_type']) && $settings['integration_type'] === IntegrationType::$CLIENT && $cachePlugin) {
             set_transient('scoby_analytics_flush_cache_notice', $cachePlugin);
+            return false;
         }
 
         $cachePlugin = self::getInstalledCachePlugin();
         if(!empty($settings['integration_type']) && $settings['integration_type'] === IntegrationType::$SERVER && $cachePlugin) {
             set_transient('scoby_analytics_use_client_integration', $cachePlugin);
+            return false;
         }
+
+        return true;
     }
 
     private static function getProxySource() {
@@ -102,7 +136,7 @@ class Helpers {
     public static function uninstallPrivacyProxy() {
 
         $target = self::getProxyTarget();
-        if(file_exists($target)) {
+        if (file_exists($target)) {
             unlink(self::getProxyTarget());
         }
     }

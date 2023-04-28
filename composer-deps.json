@@ -1,5 +1,5 @@
 {
   "require": {
-    "scoby/analytics": "0.3.6"
+    "scoby/analytics": "1.2.0"
   }
 }

@@ -39,8 +39,9 @@ $content = trim(file_get_contents("php://input"));
 $data = json_decode($content, true);
 if(!empty($data)) {
 
-    $jarId = $settings['jar_id'];
-    $client = new Client($jarId);
+    $apiKey = $settings['api_key'];
+    $salt = $settings['salt'];
+    $client = new Client($apiKey, $salt);
     $client->setRequestedUrl($data['url']);
     if(!empty($_REQUEST['ref'])) {
         $client->setReferringUrl($data['ref']);

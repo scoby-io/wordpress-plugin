@@ -7,20 +7,17 @@ use ScobyAnalyticsDeps\Scoby\Analytics\Helpers;
 
 class Plugin
 {
-    private $blockedUserAgents = ['WP Rocket/Preload'];
-
     public function initialize()
     {
         $settings = $this->getSettings();
 
         if(!empty($settings['integration_type']) && $settings['integration_type'] === 'SERVER') {
             \add_action('wp_footer', function () use ($settings) {
-                $userAgent = Helpers::getUserAgent();
-                if (!empty($settings['jar_id']) && !in_array($userAgent, $this->blockedUserAgents)) {
-                    $jarId = $settings['jar_id'];
-                    $client = new Client($jarId);
-                    $client->setUserAgent($userAgent);
-                    $loggingEnabled = $settings['logging_enabled'] === true;
+                if (!empty($settings['api_key'])) {
+                    $apiKey = $settings['api_key'];
+                    $salt = $settings['salt'];
+                    $client = new Client($apiKey, $salt);
+                    $loggingEnabled = !empty($settings['logging_enabled']) && $settings['logging_enabled'] === true;
                     if ($loggingEnabled) {
                         $logger = new Logger();
                         $client->setLogger($logger);
@@ -68,5 +65,6 @@ SCRIPT_CODE;
     public function deactivate()
     {
         \ScobyAnalytics\Helpers::uninstallPrivacyProxy();
+        \ScobyAnalytics\Helpers::resetConfig();
     }
 }

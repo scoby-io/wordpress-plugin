@@ -28,6 +28,15 @@ function scoby_analytics_render_settings_page()
     <div class="wrap">
         <h1>Scoby Analytics</h1>
 
+        <style>
+            input[name="scoby_analytics_options[api_key]"] {
+                width: 600px !important;
+            }
+            input[name="scoby_analytics_options[salt]"] {
+                width: 450px !important;
+            }
+        </style>
+
 
         <nav class="nav-tab-wrapper">
             <a href="?page=scoby-analytics-plugin" class="nav-tab <?php if(empty(getActiveTab())) echo 'nav-tab-active' ?>">General</a>
@@ -48,7 +57,7 @@ function scoby_analytics_register_settings()
     register_setting('scoby_analytics_options', 'scoby_analytics_options', 'scoby_analytics_options_validate');
     add_settings_section('scoby_analytics_settings', 'General Settings', 'scoby_analytics_section_text', 'scoby_analytics');
 
-    add_settings_field('scoby_analytics_setting_jar_id', 'Jar ID', 'scoby_analytics_setting_jar_id', 'scoby_analytics', 'scoby_analytics_settings');
+    add_settings_field('scoby_analytics_setting_api_key', 'API Key', 'scoby_analytics_setting_api_key', 'scoby_analytics', 'scoby_analytics_settings');
 }
 
 function scoby_analytics_register_advanced_settings()
@@ -57,6 +66,7 @@ function scoby_analytics_register_advanced_settings()
 
     add_settings_field('scoby_analytics_setting_integration_type', 'Integration Type', 'scoby_analytics_setting_integration_type', 'scoby_analytics', 'scoby_analytics_advanced_settings');
     add_settings_field('scoby_analytics_setting_endpoint', 'Privacy Proxy Path', 'scoby_analytics_setting_endpoint', 'scoby_analytics', 'scoby_analytics_advanced_settings');
+    add_settings_field('scoby_analytics_setting_salt', 'Privacy Salt', 'scoby_analytics_setting_salt', 'scoby_analytics', 'scoby_analytics_advanced_settings');
     add_settings_field('scoby_analytics_setting_logging_enabled', 'Logging enabled?', 'scoby_analytics_setting_logging_enabled', 'scoby_analytics', 'scoby_analytics_advanced_settings');
 
 }
@@ -67,33 +77,36 @@ if(getActiveTab() === 'advanced') {
     add_action('admin_init', 'scoby_analytics_register_settings');
 }
 
+
 function scoby_analytics_options_validate($input)
 {
-    $newinput = Helpers::getConfig();
+    $settings = Helpers::getConfig();
 
-    if(!empty($input['jar_id'])) {
+    if(!empty($input['api_key'])) {
 
-        $jarId = trim($input['jar_id']);
+        $apiKey = trim($input['api_key']);
+        $salt = $settings['salt'];
 
-        if (empty($jarId)) {
+        if (empty($apiKey)) {
             add_settings_error(
-                'scoby_analytics_options_jar_id',
+                'scoby_analytics_options_api_key',
                 esc_attr('settings_updated'),
-                'The Jar ID can not be empty.',
+                'The API Key can not be empty.',
                 'error'
             );
             return;
         }
 
-        $client = new Client($jarId);
+        $client = new Client($apiKey, $salt);
 
         if ($client->testConnection()) {
-            $newinput['jar_id'] = $jarId;
+            $settings['api_key'] = $apiKey;
+            $settings['salt'] = $salt;
         } else {
             add_settings_error(
-                'scoby_analytics_options_jar_id',
+                'scoby_analytics_options_api_key',
                 esc_attr('settings_updated'),
-                'The Jar ID you provided is invalid. Please check and try again.',
+                'The API Key you provided is invalid. Please check and try again.',
                 'error'
             );
             return;
@@ -101,42 +114,72 @@ function scoby_analytics_options_validate($input)
     }
 
     if(!empty($input['logging_enabled'])) {
-        $newinput['logging_enabled'] = $input['logging_enabled'] === 'yes';
+        $settings['logging_enabled'] = $input['logging_enabled'] === 'yes';
     }
 
     if(!empty($input['integration_type'])) {
-        $newinput['integration_type'] = $input['integration_type'];
+        $settings['integration_type'] = $input['integration_type'];
+    }
+
+    if(!empty($input['salt'])) {
+        $settings['salt'] = $input['salt'];
     }
 
     if(!empty($input['proxy_endpoint'])) {
-        $newinput['proxy_endpoint'] = $input['proxy_endpoint'];
+        $settings['proxy_endpoint'] = $input['proxy_endpoint'];
     }
 
-    $newinput['manual_config'] = true;
+    $settings['manual_config'] = true;
 
     set_transient('scoby_analytics_check_config', true);
 
-    return $newinput;
+    return $settings;
 }
 
 function scoby_analytics_section_text()
 {
-//    echo '<p>Please enter the Jar ID from your </p>';
+//    echo '<p>Please enter the API Key from your </p>';
 }
 
-function scoby_analytics_setting_jar_id()
+function scoby_analytics_setting_api_key()
 {
-    $options = get_option('scoby_analytics_options');
-    $apiKey = !empty($options['jar_id']) ? $options['jar_id'] : "";
-    echo "<input id='scoby_analytics_setting_jar_id' name='scoby_analytics_options[jar_id]' type='text' value='" . esc_attr($apiKey) . "' />";
-    echo '<p>To find your Jar ID:</p>';
-    echo '<ol>
-    <li>Log into your account on <a href="https://app.scoby.io" target="_blank">https://app.scoby.io</a></li>
-    <li>Click your name on the upper right</li>
-    <li>Select "Integration Guide"</li>
-    <li>Find your Jar ID in the Wordpress section.</li>
-</ol>';
+    $options = Helpers::getConfig();
+    $apiKey = !empty($options['api_key']) ? $options['api_key'] : "";
+    echo "<input id='scoby_analytics_setting_api_key' name='scoby_analytics_options[api_key]' type='text' value='" . esc_attr($apiKey) . "' />";
+    echo '<p>Have no API Key yet? Get yours now on <a href="https://app.scoby.io" target="_blank">https://app.scoby.io</a> and test 30 days for free! 
+            <br>Free means free like in free beer - no credit card needed, no need to cancel.</p>';
 }
+
+function scoby_analytics_integration_test()
+{
+    $settings = Helpers::getConfig();
+
+    // call homepage to trigger a call to scoby
+    \wp_remote_get(\get_home_url());
+    sleep(1);
+
+    $apiKey = trim($settings['api_key']);
+    $salt = $settings['salt'];
+
+    $client = new Client($apiKey, $salt);
+    $res = $client->getApiStatus();
+    if ($res->getStatusCode() === 200) {
+        $body = json_decode($res->getBody(), true);
+
+        $origin = new DateTimeImmutable($body['lastHit']);
+        $target = new DateTimeImmutable();
+        $interval = $origin->diff($target);
+
+        if(intval($interval->format('%s')) < 10) {
+            echo '<p>Traffic is flowing in. Everything is fine.</p>';
+        } else {
+            echo '<p>It seems we are not receiving traffic from you currently. Please check your error logs and contact support.</p>';
+        }
+    } else {
+        echo '<p>Something is not working properly on our end currently. Please check again later.</p>';
+    }
+}
+
 
 function scoby_analytics_setting_logging_enabled()
 {
@@ -181,4 +224,12 @@ function scoby_analytics_setting_endpoint()
              When this value is set to "foobar", scoby will measure traffic through calls to '.$_SERVER['HTTP_HOST'].'/foobar. <br>
              Scoby automatically chooses a random value to avoid collisions with any of your site\'s URLs.</p>';
 }
-;
+
+function scoby_analytics_setting_salt()
+{
+    $options = Helpers::getConfig();
+    $endpoint = !empty($options['salt']) ? $options['salt'] : Helpers::generateSalt();
+    echo "<input type='text' name='scoby_analytics_options[salt]' value='".$endpoint."'>";
+
+    echo '<p>This value is used to anonymize sensitive parts of your traffic before it is sent to our servers. <br>You can safely ignore this setting and please do not change it unless you know what your are doing.</p>';
+}
