@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/scobyio/analytics-wp/compare/v2.0.0...v2.1.0) (2023-08-06)
+
+
+### Features
+
+* update readme ([774fe0a](https://github.com/scobyio/analytics-wp/commit/774fe0ada7ec3dbfa5edf2e78778ee47e2c99bc6))
+
 ## [2.0.0](https://github.com/scobyio/analytics-wp/compare/v1.3.2...v2.0.0) (2023-04-28)
 
 
