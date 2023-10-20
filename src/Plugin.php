@@ -27,7 +27,7 @@ class Plugin
                 }
             });
         } else if(!empty($settings['integration_type']) && $settings['integration_type'] === 'CLIENT') {
-            $proxyEndpoint = !empty($settings['proxy_endpoint']) ? $settings['proxy_endpoint'] : '';
+            $proxyEndpoint = \esc_js(!empty($settings['proxy_endpoint']) ? $settings['proxy_endpoint'] : '');
             \add_action('wp_footer', function () use ($proxyEndpoint) {
 
                 $scriptCode = <<<SCRIPT_CODE
