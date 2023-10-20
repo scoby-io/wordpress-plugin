@@ -14,7 +14,9 @@ $settings = get_option('scoby_analytics_options');
 
 $proxyEnabled = !empty($settings['integration_type']) && $settings['integration_type'] === 'CLIENT';
 $proxyEndpoint = !empty($settings['proxy_endpoint']) ? "/" . $settings['proxy_endpoint'] : null;
-$path = explode("?", $_SERVER['REQUEST_URI'])[0];
+
+$uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING);
+$path = explode("?", $uri)[0];
 
 if($proxyEnabled === false || $proxyEndpoint === null || $path !== $proxyEndpoint) {
     return;
@@ -42,10 +44,15 @@ if(!empty($data)) {
     $apiKey = $settings['api_key'];
     $salt = $settings['salt'];
     $client = new Client($apiKey, $salt);
+
+    $requestedUrl = filter_var($data['url'], FILTER_VALIDATE_URL);
     $client->setRequestedUrl($data['url']);
-    if(!empty($_REQUEST['ref'])) {
+
+    if(!empty($data['ref'])) {
+        $referringUrl = filter_var($data['ref'], FILTER_VALIDATE_URL);
         $client->setReferringUrl($data['ref']);
     }
+
     $loggingEnabled = $settings['logging_enabled'] === true;
     if ($loggingEnabled) {
         $logger = new Logger();
