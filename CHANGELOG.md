@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.4](https://github.com/scobyio/analytics-wp/compare/v2.2.3...v2.2.4) (2023-10-21)
+
+
+### Bug Fixes
+
+* escape settings input ([c3257b1](https://github.com/scobyio/analytics-wp/commit/c3257b1853741d410e562fcb0e8f83d4795902cb))
+
 ### [2.2.3](https://github.com/scobyio/analytics-wp/compare/v2.2.2...v2.2.3) (2023-10-21)
 
 ### [2.2.2](https://github.com/scobyio/analytics-wp/compare/v2.2.1...v2.2.2) (2023-10-21)
