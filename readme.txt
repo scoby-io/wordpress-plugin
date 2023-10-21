@@ -4,7 +4,7 @@ Donate link: https://www.scoby.io/
 Tags: traffic statistics, visitor statistics, traffic, stats, statistics, measurement, tracking, analytics, GDPR-compliant, privacy-focused
 Requires at least: 4.7
 Tested up to: 6.3.2
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
