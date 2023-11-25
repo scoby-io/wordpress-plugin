@@ -11,7 +11,7 @@ class Plugin
     {
         $settings = $this->getSettings();
 
-        if(!empty($settings['integration_type']) && $settings['integration_type'] === 'SERVER') {
+        if (!empty($settings['integration_type']) && $settings['integration_type'] === 'SERVER') {
             \add_action('wp_footer', function () use ($settings) {
                 if (!empty($settings['api_key'])) {
                     $apiKey = $settings['api_key'];
@@ -26,28 +26,23 @@ class Plugin
                     $client->logPageViewAsync();
                 }
             });
-        } else if(!empty($settings['integration_type']) && $settings['integration_type'] === 'CLIENT') {
+        } else if (!empty($settings['integration_type']) && $settings['integration_type'] === 'CLIENT') {
             $proxyEndpoint = \esc_js(!empty($settings['proxy_endpoint']) ? $settings['proxy_endpoint'] : '');
-            \add_action('wp_footer', function () use ($proxyEndpoint) {
 
-                $scriptCode = <<<SCRIPT_CODE
-<script type="text/javascript" async>
-fetch('/$proxyEndpoint?' + (Math.random() + 1).toString(36).substring(2), {
-    method: 'POST',
-    mode: 'same-origin',
-    cache: 'no-cache',
-    credentials: 'omit',
-    referrerPolicy: 'no-referrer',
+            \wp_register_script( 'scoby-analytics', '', [], '', true );
+            \wp_enqueue_script( 'scoby-analytics'  );
+            \wp_add_inline_script('scoby-analytics', 'fetch("/' . $proxyEndpoint . '?" + (Math.random() + 1).toString(36).substring(2), {
+    method: "POST",
+    mode: "same-origin",
+    cache: "no-cache",
+    credentials: "omit",
+    referrerPolicy: "no-referrer",
     body: JSON.stringify({
         url: document.location.href,
         ref: document.referrer
     })
-}).catch(console.log);
-</script>
-SCRIPT_CODE;
+}).catch(console.log);');
 
-                echo $scriptCode;
-            });
         }
     }
 
