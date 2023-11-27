@@ -20,7 +20,7 @@ add_action( 'admin_menu', function () {
 
 function getActiveTab() {
     if(!empty($_GET['tab'])) {
-        return  filter_var($_GET['tab'], FILTER_SANITIZE_STRING);
+        return  filter_var($_GET['tab'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 }
 
@@ -222,7 +222,7 @@ function scoby_analytics_setting_endpoint()
     $endpoint = !empty($options['proxy_endpoint']) ? $options['proxy_endpoint'] : Helpers::generateProxyEndpoint();
     echo "<input type='text' name='scoby_analytics_options[proxy_endpoint]' value='".$endpoint."'>";
 
-    $host = filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_STRING);
+    $host = filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     echo '<p>When using Cache-Optimized integration, your traffic is routed through this path. <br>
              When this value is set to "foobar", scoby will measure traffic through calls to '.$host.'/foobar. <br>

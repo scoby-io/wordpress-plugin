@@ -3,7 +3,6 @@
 namespace ScobyAnalytics;
 
 use ScobyAnalyticsDeps\Scoby\Analytics\Client;
-use ScobyAnalyticsDeps\Scoby\Analytics\Helpers;
 
 class Plugin
 {
@@ -17,6 +16,8 @@ class Plugin
                     $apiKey = $settings['api_key'];
                     $salt = $settings['salt'];
                     $client = new Client($apiKey, $salt);
+                    $httpClient = new HttpClient();
+                    $client->setHttpClient($httpClient);
                     $loggingEnabled = !empty($settings['logging_enabled']) && $settings['logging_enabled'] === true;
                     if ($loggingEnabled) {
                         $logger = new Logger();
@@ -27,11 +28,13 @@ class Plugin
                 }
             });
         } else if (!empty($settings['integration_type']) && $settings['integration_type'] === 'CLIENT') {
+
             $proxyEndpoint = \esc_js(!empty($settings['proxy_endpoint']) ? $settings['proxy_endpoint'] : '');
 
-            \wp_register_script( 'scoby-analytics', '', [], '', true );
-            \wp_enqueue_script( 'scoby-analytics'  );
-            \wp_add_inline_script('scoby-analytics', 'fetch("/' . $proxyEndpoint . '?" + (Math.random() + 1).toString(36).substring(2), {
+            \add_action('wp_footer', function () use ($proxyEndpoint) {
+                \wp_register_script( 'scoby-analytics', '', [], '', true );
+                \wp_enqueue_script( 'scoby-analytics'  );
+                \wp_add_inline_script('scoby-analytics', 'fetch("/' . $proxyEndpoint . '?" + (Math.random() + 1).toString(36).substring(2), {
     method: "POST",
     mode: "same-origin",
     cache: "no-cache",
@@ -42,7 +45,7 @@ class Plugin
         ref: document.referrer
     })
 }).catch(console.log);');
-
+            });
         }
     }
 

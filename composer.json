@@ -8,20 +8,34 @@
   },
   "minimum-stability": "stable",
   "require-dev": {
-    "psr/log": "^1.1",
-    "wpify/scoper": "^2.5"
+    "wpify/scoper": "2.5.4"
   },
   "scripts": {
     "release": "composer install --optimize-autoloader && composer install --no-dev --optimize-autoloader && composer dumpautoload -o && npm run plugin-zip"
   },
   "config": {
     "allow-plugins": {
-      "wpify/scoper": true
+      "wpify/scoper": true,
+      "php-http/discovery": true
     }
   },
   "extra": {
     "wpify-scoper": {
-      "prefix": "ScobyAnalyticsDeps"
+      "prefix": "ScobyAnalyticsDeps",
+      "folder": "deps",
+      "globals": [
+        "wordpress",
+        "woocommerce"
+      ],
+      "composerjson": "composer-deps.json",
+      "composerlock": "composer-deps.lock",
+      "autorun": true
+    },
+    "discovery": {
+      "psr/http-factory-implementation": "RebelCode\\Psr7\\HttpFactory"
     }
+  },
+  "require": {
+    "sniccowp/php-scoper-wordpress-excludes": "*"
   }
 }

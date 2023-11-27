@@ -15,6 +15,7 @@ if(!defined('SCOBY_ANALYTICS_PLUGIN_ROOT')) {
 }
 
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/deps/scoper-autoload.php';
+require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/deps/autoload.php';
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/vendor/autoload.php';
 
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/settings.php';

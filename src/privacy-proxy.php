@@ -7,15 +7,17 @@
  * Author URI: https://scoby.io
  */
 
+use ScobyAnalytics\HttpClient;
 use ScobyAnalytics\Logger;
 use ScobyAnalyticsDeps\Scoby\Analytics\Client;
+
 
 $settings = get_option('scoby_analytics_options');
 
 $proxyEnabled = !empty($settings['integration_type']) && $settings['integration_type'] === 'CLIENT';
 $proxyEndpoint = !empty($settings['proxy_endpoint']) ? "/" . $settings['proxy_endpoint'] : null;
 
-$uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING);
+$uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $path = explode("?", $uri)[0];
 
 if($proxyEnabled === false || $proxyEndpoint === null || $path !== $proxyEndpoint) {
@@ -45,6 +47,9 @@ if(!empty($data)) {
     $salt = $settings['salt'];
     $client = new Client($apiKey, $salt);
 
+    $httpClient = new HttpClient();
+    $client->setHttpClient($httpClient);
+
     $requestedUrl = filter_var($data['url'], FILTER_VALIDATE_URL);
     $client->setRequestedUrl($data['url']);
 
@@ -61,6 +66,7 @@ if(!empty($data)) {
 
     $client->logPageViewAsync();
 }
+
 
 ob_start();
 

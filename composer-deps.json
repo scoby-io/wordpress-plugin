@@ -1,5 +1,12 @@
 {
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  },
   "require": {
-    "scoby/analytics": "1.2.0"
+    "rebelcode/wp-http": "0.3",
+    "psr/log": "1.1.4",
+    "scoby/analytics": "2.0.0-alpha"
   }
 }
