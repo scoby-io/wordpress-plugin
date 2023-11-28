@@ -1,5 +1,7 @@
 <?php
 
+if (!defined('ABSPATH')) exit;
+
 use ScobyAnalytics\Helpers;
 use ScobyAnalytics\IntegrationType;
 use ScobyAnalyticsDeps\Scoby\Analytics\Client;
@@ -11,16 +13,18 @@ function scoby_analytics_add_settings_page()
 {
     add_options_page('Scoby Analytics', 'Scoby Analytics', 'manage_options', 'scoby-analytics-plugin', 'scoby_analytics_render_settings_page');
 }
+
 add_action('admin_menu', 'scoby_analytics_add_settings_page');
 
 
-add_action( 'admin_menu', function () {
-    add_menu_page( 'Scoby Analytics', 'Scoby Analytics', 'manage_options', 'scoby-analytics-plugin', 'scoby_analytics_render_settings_page', 'dashicons-chart-bar' );
+add_action('admin_menu', function () {
+    add_menu_page('Scoby Analytics', 'Scoby Analytics', 'manage_options', 'scoby-analytics-plugin', 'scoby_analytics_render_settings_page', 'dashicons-chart-bar');
 });
 
-function getActiveTab() {
-    if(!empty($_GET['tab'])) {
-        return  filter_var($_GET['tab'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+function scoby_analytics_get_active_tab()
+{
+    if (!empty($_GET['tab'])) {
+        return filter_var($_GET['tab'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 }
 
@@ -34,6 +38,7 @@ function scoby_analytics_render_settings_page()
             input[name="scoby_analytics_options[api_key]"] {
                 width: 600px !important;
             }
+
             input[name="scoby_analytics_options[salt]"] {
                 width: 450px !important;
             }
@@ -41,14 +46,18 @@ function scoby_analytics_render_settings_page()
 
 
         <nav class="nav-tab-wrapper">
-            <a href="?page=scoby-analytics-plugin" class="nav-tab <?php if(empty(getActiveTab())) echo 'nav-tab-active' ?>">General</a>
-            <a href="?page=scoby-analytics-plugin&tab=advanced" class="nav-tab <?php if(getActiveTab() === 'advanced') echo 'nav-tab-active' ?>">Advanced Settings</a>
+            <a href="?page=scoby-analytics-plugin"
+               class="nav-tab <?php if (empty(scoby_analytics_get_active_tab())) echo 'nav-tab-active' ?>">General</a>
+            <a href="?page=scoby-analytics-plugin&tab=advanced"
+               class="nav-tab <?php if (scoby_analytics_get_active_tab() === 'advanced') echo 'nav-tab-active' ?>">Advanced
+                Settings</a>
         </nav>
         <form action="options.php" method="post">
             <?php
             settings_fields('scoby_analytics_options');
             do_settings_sections('scoby_analytics'); ?>
-            <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e('Save Settings'); ?>"/>
+            <input name="submit" class="button button-primary" type="submit"
+                   value="<?php esc_attr_e('Save Settings'); ?>"/>
         </form>
     </div>
     <?php
@@ -73,7 +82,7 @@ function scoby_analytics_register_advanced_settings()
 
 }
 
-if(getActiveTab() === 'advanced') {
+if (scoby_analytics_get_active_tab() === 'advanced') {
     add_action('admin_init', 'scoby_analytics_register_advanced_settings');
 } else {
     add_action('admin_init', 'scoby_analytics_register_settings');
@@ -84,7 +93,7 @@ function scoby_analytics_options_validate($input)
 {
     $settings = Helpers::getConfig();
 
-    if(!empty($input['api_key'])) {
+    if (!empty($input['api_key'])) {
 
         $apiKey = trim($input['api_key']);
         $salt = $settings['salt'];
@@ -117,15 +126,15 @@ function scoby_analytics_options_validate($input)
 
     $settings['logging_enabled'] = (!empty($input['logging_enabled']) && $input['logging_enabled'] === 'yes');
 
-    if(!empty($input['integration_type'])) {
+    if (!empty($input['integration_type'])) {
         $settings['integration_type'] = $input['integration_type'];
     }
 
-    if(!empty($input['salt'])) {
+    if (!empty($input['salt'])) {
         $settings['salt'] = $input['salt'];
     }
 
-    if(!empty($input['proxy_endpoint'])) {
+    if (!empty($input['proxy_endpoint'])) {
         $settings['proxy_endpoint'] = $input['proxy_endpoint'];
     }
 
@@ -170,7 +179,7 @@ function scoby_analytics_integration_test()
         $target = new DateTimeImmutable();
         $interval = $origin->diff($target);
 
-        if(intval($interval->format('%s')) < 10) {
+        if (intval($interval->format('%s')) < 10) {
             echo '<p>Traffic is flowing in. Everything is fine.</p>';
         } else {
             echo '<p>It seems we are not receiving traffic from you currently. Please check your error logs and contact support.</p>';
@@ -196,13 +205,13 @@ function scoby_analytics_setting_integration_type()
     $options = Helpers::getConfig();
     $integrationType = !empty($options['integration_type']) ? $options['integration_type'] : IntegrationType::detect();
     echo "<select id='scoby_analytics_setting_integration_type' name='scoby_analytics_options[integration_type]' >
-    <option value='SERVER' ".($integrationType === 'SERVER' ? 'selected' : '').">Standard</option>    
-    <option value='CLIENT' ".($integrationType === 'CLIENT' ? 'selected' : '').">Cache-Optimized</option>    
+    <option value='SERVER' " . ($integrationType === 'SERVER' ? 'selected' : '') . ">Standard</option>    
+    <option value='CLIENT' " . ($integrationType === 'CLIENT' ? 'selected' : '') . ">Cache-Optimized</option>    
 </select>
 <input type='hidden' name='scoby_analytics_options[endpoint]' value=''>
 ";
     $cachePlugin = Helpers::getInstalledCachePlugin();
-    if($cachePlugin) {
+    if ($cachePlugin) {
         printf('<p>We detected the %s Plugin and recommend to use our Cache-Optimized Integration Type. <br>
                  Our Standard integration type requires each page view to be served by your wordpress installation<br>
                  Please only use our Standard integration if you know what you are doing.</p>', \esc_html($cachePlugin));

@@ -7,10 +7,11 @@
  * Author URI: https://scoby.io
  */
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 use ScobyAnalytics\HttpClient;
 use ScobyAnalytics\Logger;
 use ScobyAnalyticsDeps\Scoby\Analytics\Client;
-
 
 $settings = get_option('scoby_analytics_options');
 

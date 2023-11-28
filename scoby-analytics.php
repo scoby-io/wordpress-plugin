@@ -8,8 +8,8 @@ Author URI: https://www.scoby.io
 Requires PHP: 7.4
 */
 
-defined('ABSPATH') or die('I can only run in Wordpress.');
-define('MIN_PHP_VERSION', '7.4');
+if (!defined('ABSPATH')) exit;
+define('SCOBY_ANALYTICS_MIN_PHP_VERSION', '7.4');
 if(!defined('SCOBY_ANALYTICS_PLUGIN_ROOT')) {
     define('SCOBY_ANALYTICS_PLUGIN_ROOT', untrailingslashit(plugin_dir_path(__FILE__)));
 }
@@ -20,9 +20,10 @@ require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/vendor/autoload.php';
 
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/settings.php';
 
+use ScobyAnalytics\Helpers;
 use ScobyAnalytics\Plugin;
 
-if (version_compare(PHP_VERSION, MIN_PHP_VERSION, '<=')) {
+if (version_compare(PHP_VERSION, SCOBY_ANALYTICS_MIN_PHP_VERSION, '<=')) {
     add_action(
         'admin_init',
         static function () {
@@ -51,14 +52,14 @@ register_activation_hook(__FILE__, array($plugin, 'activate'));
 register_deactivation_hook(__FILE__, array($plugin, 'deactivate'));
 
 add_action('plugins_loaded', function () use ($plugin) {
-    $version = \ScobyAnalytics\Helpers::getVersion();
+    $version = Helpers::getVersion();
     if ($version !== get_option('scoby_analytics_version')) {
         $plugin->activate();
         update_option('scoby_analytics_version', $version);
     }
 
     if(get_transient('scoby_analytics_check_config')) {
-        \ScobyAnalytics\Helpers::checkConfig();
+        Helpers::checkConfig();
         delete_transient('scoby_analytics_check_config');
     }
 });
@@ -72,7 +73,7 @@ if (!wp_installing()) {
     );
 }
 
-$options = \ScobyAnalytics\Helpers::getConfig();
+$options = Helpers::getConfig();
 if (empty($options['api_key'])) {
     add_action('admin_notices', function () {
         ?>
