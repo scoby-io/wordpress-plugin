@@ -39,8 +39,26 @@ require join(DIRECTORY_SEPARATOR,  array(
 ));
 
 
-$content = trim(file_get_contents("php://input"));
-$data = json_decode($content, true);
+$content = \trim(\file_get_contents("php://input"));
+$input = \json_decode($content);
+
+$filters = [
+    'url'=>FILTER_VALIDATE_URL,
+    'ref'=>FILTER_VALIDATE_URL,
+];
+$options = [
+    'url'=> [
+        'flags'=>FILTER_NULL_ON_FAILURE
+    ],
+    'ref'=> [
+        'flags'=>FILTER_NULL_ON_FAILURE
+    ],
+];
+$data = [];
+foreach($input as $key => $value) {
+    $data[$key] = filter_var($value, $filters[$key], $options[$key]);
+}
+
 if(!empty($data)) {
 
     $apiKey = $settings['api_key'];

@@ -115,9 +115,7 @@ function scoby_analytics_options_validate($input)
         }
     }
 
-    if(!empty($input['logging_enabled'])) {
-        $settings['logging_enabled'] = $input['logging_enabled'] === 'yes';
-    }
+    $settings['logging_enabled'] = (!empty($input['logging_enabled']) && $input['logging_enabled'] === 'yes');
 
     if(!empty($input['integration_type'])) {
         $settings['integration_type'] = $input['integration_type'];
@@ -147,8 +145,8 @@ function scoby_analytics_setting_api_key()
 {
     $options = Helpers::getConfig();
     $apiKey = !empty($options['api_key']) ? $options['api_key'] : "";
-    echo "<input id='scoby_analytics_setting_api_key' name='scoby_analytics_options[api_key]' type='text' value='" . esc_attr($apiKey) . "' />";
-    echo '<p>Have no API Key yet? Get yours now on <a href="https://app.scoby.io" target="_blank">https://app.scoby.io</a> and test 30 days for free! 
+    printf("<input id='scoby_analytics_setting_api_key' name='scoby_analytics_options[api_key]' type='text' value='%s' />", esc_attr($apiKey));
+    echo '<p>Have no API Key yet? Get yours now on <a href="https://analytics.scoby.io" target="_blank">https://analytics.scoby.io</a> and test 30 days for free! 
             <br>Free means free like in free beer - no credit card needed, no need to cancel.</p>';
 }
 
@@ -188,7 +186,7 @@ function scoby_analytics_setting_logging_enabled()
     $options = Helpers::getConfig();
     $loggingEnabled = !empty($options['logging_enabled']) ? $options['logging_enabled'] : false;
     $checked = $loggingEnabled === true ? 'checked' : '';
-    echo "<input type='checkbox' id='scoby_analytics_setting_logging_enabled' name='scoby_analytics_options[logging_enabled]' value='yes' " . $checked . " />";
+    printf("<input type='checkbox' id='scoby_analytics_setting_logging_enabled' name='scoby_analytics_options[logging_enabled]' value='yes' %s />", esc_attr($checked));
     echo '<p>If logging is enabled all requests to scoby servers and other useful debug information <br>
              will be logged into the log file of this Wordpress installation.</p>';
 }
@@ -205,9 +203,9 @@ function scoby_analytics_setting_integration_type()
 ";
     $cachePlugin = Helpers::getInstalledCachePlugin();
     if($cachePlugin) {
-        echo '<p>We detected the '.$cachePlugin.' Plugin and recommend to use our Cache-Optimized Integration Type. <br>
+        printf('<p>We detected the %s Plugin and recommend to use our Cache-Optimized Integration Type. <br>
                  Our Standard integration type requires each page view to be served by your wordpress installation<br>
-                 Please only use our Standard integration if you know what you are doing.</p>';
+                 Please only use our Standard integration if you know what you are doing.</p>', \esc_html($cachePlugin));
     } else {
         echo '<p>We did not detect any Cache Plugin such as WP Rocket, Fastest Cache, Super Cache etc), so we assume <br>
                  you can safely use our Standard integration. If you render your pages to a CDN or facilitate some other <br>
@@ -220,20 +218,20 @@ function scoby_analytics_setting_endpoint()
 {
     $options = Helpers::getConfig();
     $endpoint = !empty($options['proxy_endpoint']) ? $options['proxy_endpoint'] : Helpers::generateProxyEndpoint();
-    echo "<input type='text' name='scoby_analytics_options[proxy_endpoint]' value='".$endpoint."'>";
+    printf("<input type='text' name='scoby_analytics_options[proxy_endpoint]' value='%s'>", \esc_attr($endpoint));
 
     $host = filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    echo '<p>When using Cache-Optimized integration, your traffic is routed through this path. <br>
-             When this value is set to "foobar", scoby will measure traffic through calls to '.$host.'/foobar. <br>
-             Scoby automatically chooses a random value to avoid collisions with any of your site\'s URLs.</p>';
+    printf('<p>When using Cache-Optimized integration, your traffic is routed through this path. <br>
+             When this value is set to "foobar", scoby will measure traffic through calls to %s/foobar. <br>
+             Scoby automatically chooses a random value to avoid collisions with any of your site\'s URLs.</p>', \esc_html($host));
 }
 
 function scoby_analytics_setting_salt()
 {
     $options = Helpers::getConfig();
     $endpoint = !empty($options['salt']) ? $options['salt'] : Helpers::generateSalt();
-    echo "<input type='text' name='scoby_analytics_options[salt]' value='".$endpoint."'>";
+    printf("<input type='text' name='scoby_analytics_options[salt]' value='%s'>", \esc_attr($endpoint));
 
     echo '<p>This value is used to anonymize sensitive parts of your traffic before it is sent to our servers. <br>You can safely ignore this setting and please do not change it unless you know what your are doing.</p>';
 }

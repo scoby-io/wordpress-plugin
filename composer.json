@@ -24,8 +24,7 @@
       "prefix": "ScobyAnalyticsDeps",
       "folder": "deps",
       "globals": [
-        "wordpress",
-        "woocommerce"
+        "wordpress"
       ],
       "composerjson": "composer-deps.json",
       "composerlock": "composer-deps.lock",

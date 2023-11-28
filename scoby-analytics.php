@@ -19,10 +19,8 @@ require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/deps/autoload.php';
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/vendor/autoload.php';
 
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/settings.php';
-require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/plugin-update-checker/plugin-update-checker.php';
 
 use ScobyAnalytics\Plugin;
-use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 if (version_compare(PHP_VERSION, MIN_PHP_VERSION, '<=')) {
     add_action(
@@ -79,7 +77,7 @@ if (empty($options['api_key'])) {
     add_action('admin_notices', function () {
         ?>
 		<div class="notice-warning notice">
-			<p><?php _e('scoby analytics will measure your traffic, as soon as you have entered your API Key in the <a href="' . admin_url('options-general.php?page=scoby-analytics-plugin') . '">Plugin\'s Settings</a>.', 'my_plugin_textdomain'); ?></p>
+			<p><?php print_f(_e('Scoby Analytics will measure your traffic, as soon as you have entered your API Key in the <a href="%s">Plugin\'s Settings</a>.', 'scoby_analytics_textdomain'),  esc_attr(admin_url('options-general.php?page=scoby-analytics-plugin'))); ?></p>
 		</div>
         <?php
     });
@@ -89,7 +87,7 @@ if (empty($options['api_key'])) {
         if(!empty($cachePlugin)) {
             ?>
             <div class="notice-warning notice">
-                <p><?php _e('Scoby Analytics has detected you are using the <b>'.$cachePlugin.'</b> Plugin. Please flush your cache to start measuring.', 'my_plugin_textdomain'); ?></p>
+                <p><?php print_f(_e('Scoby Analytics has detected you are using the <b>%s</b> Plugin. Please flush your cache to start measuring.', 'scoby_analytics_textdomain'), esc_html($cachePlugin)); ?></p>
             </div>
             <?php
             delete_transient('scoby_analytics_flush_cache_notice');
@@ -101,7 +99,7 @@ if (empty($options['api_key'])) {
         if(!empty($cachePlugin)) {
             ?>
             <div class="notice-warning notice">
-                <p><?php _e('Scoby Analytics has detected you are using the <b>'.$cachePlugin.'</b> Plugin, but are using our Standard integration. We strongly recommend to <b>switch to Cache-Optimized integration</b> in the  <a href="' . admin_url('options-general.php?page=scoby-analytics-plugin&tab=advanced') . '">Plugin\'s Advanced Settings</a> for optimal results.', 'my_plugin_textdomain'); ?></p>
+                <p><?php print_f(_e('Scoby Analytics has detected you are using the <b>%s</b> Plugin, but are using our Standard integration. We strongly recommend to <b>switch to Cache-Optimized integration</b> in the  <a href="%s">Plugin\'s Advanced Settings</a> for optimal results.', 'scoby_analytics_textdomain'), esc_html($cachePlugin), esc_attr(admin_url('options-general.php?page=scoby-analytics-plugin&tab=advanced'))); ?></p>
             </div>
             <?php
             delete_transient('scoby_analytics_use_client_integration');
@@ -109,24 +107,13 @@ if (empty($options['api_key'])) {
     });
 }
 
-
-
-
-function add_action_links($actions)
+function scoby_analytics_add_action_links($actions)
 {
     $mylinks = array(
-        '<a href="' . admin_url('options-general.php?page=scoby-analytics-plugin') . '">Settings</a>',
+        printf('<a href="%s">Settings</a>', esc_attr(admin_url('options-general.php?page=scoby-analytics-plugin'))),
     );
     $actions = array_merge($mylinks, $actions);
     return $actions;
 }
 
-add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'add_action_links');
-
-
-$myUpdateChecker = PucFactory::buildUpdateChecker(
-    'https://github.com/scoby-io/wordpress-plugin/',
-    __FILE__,
-    'scoby-analytics'
-);
-$myUpdateChecker->getVcsApi()->enableReleaseAssets();
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'scoby_analytics_add_action_links');
