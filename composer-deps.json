@@ -4,6 +4,11 @@
       "php-http/discovery": true
     }
   },
+  "extra": {
+    "discovery": {
+      "psr/http-factory-implementation": "RebelCode\\Psr7\\HttpFactory"
+    }
+  },
   "require": {
     "rebelcode/wp-http": "0.3",
     "psr/log": "1.1.4",
