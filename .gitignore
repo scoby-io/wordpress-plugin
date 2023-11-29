@@ -1,6 +1,6 @@
 /deps/
 /vendor/
 /node_modules/
-*.zip
+#*.zip
 .idea
 .DS_Store

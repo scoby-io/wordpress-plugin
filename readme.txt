@@ -2,7 +2,7 @@
 Contributors: scobyio
 Donate link: https://www.scoby.io/
 Tags: analytics, traffic statistics, visitor statistics, traffic, stats, statistics, measurement, tracking, GDPR-compliant, privacy-focused
-Requires at least: 4.7
+Requires at least: 5.3
 Tested up to: 6.4.1
 Stable tag: 2.2.4
 Requires PHP: 7.4
