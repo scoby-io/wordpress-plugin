@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Scoby Analytics
-Description: Scoby Analytics provides meaningful insights about your websites traffic while protecting your visitors privacy at the same time. Scoby uses no cookies, does not access the end user's device, nor gathers any other personally identifiable information - we only collect anonymous data directly on your web server. Thus Scoby Analytics requires no consent regarding GDPR, ePrivacy, and Schrems II.
+Description: GDPR- & ePrivacy-compliant, consent-free insights on your WordPress site, ensuring visitor privacy with server-side data collection.
 Version: 2.2.4
 Author: Scoby GmbH
 Author URI: https://www.scoby.io
@@ -9,6 +9,7 @@ Requires PHP: 7.4
 */
 
 if (!defined('ABSPATH')) exit;
+
 define('SCOBY_ANALYTICS_MIN_PHP_VERSION', '7.4');
 if(!defined('SCOBY_ANALYTICS_PLUGIN_ROOT')) {
     define('SCOBY_ANALYTICS_PLUGIN_ROOT', untrailingslashit(plugin_dir_path(__FILE__)));
@@ -17,7 +18,6 @@ if(!defined('SCOBY_ANALYTICS_PLUGIN_ROOT')) {
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/deps/scoper-autoload.php';
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/deps/autoload.php';
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/vendor/autoload.php';
-
 require_once SCOBY_ANALYTICS_PLUGIN_ROOT . '/settings.php';
 
 use ScobyAnalytics\Helpers;
@@ -78,7 +78,7 @@ if (empty($options['api_key'])) {
     add_action('admin_notices', function () {
         ?>
 		<div class="notice-warning notice">
-			<p><?php print_f(_e('Scoby Analytics will measure your traffic, as soon as you have entered your API Key in the <a href="%s">Plugin\'s Settings</a>.', 'scoby_analytics_textdomain'),  esc_attr(admin_url('options-general.php?page=scoby-analytics-plugin'))); ?></p>
+			<p><?php printf(__('Scoby Analytics will measure your traffic, as soon as you have entered your API Key in the <a href="%s">Plugin\'s Settings</a>.', 'scoby_analytics_textdomain'),  admin_url('options-general.php?page=scoby-analytics-plugin')); ?></p>
 		</div>
         <?php
     });
@@ -88,7 +88,7 @@ if (empty($options['api_key'])) {
         if(!empty($cachePlugin)) {
             ?>
             <div class="notice-warning notice">
-                <p><?php print_f(_e('Scoby Analytics has detected you are using the <b>%s</b> Plugin. Please flush your cache to start measuring.', 'scoby_analytics_textdomain'), esc_html($cachePlugin)); ?></p>
+                <p><?php printf(__('Scoby Analytics has detected you are using the <b>%s</b> Plugin. Please flush your cache to start measuring.', 'scoby_analytics_textdomain'), esc_html($cachePlugin)); ?></p>
             </div>
             <?php
             delete_transient('scoby_analytics_flush_cache_notice');
@@ -100,7 +100,7 @@ if (empty($options['api_key'])) {
         if(!empty($cachePlugin)) {
             ?>
             <div class="notice-warning notice">
-                <p><?php print_f(_e('Scoby Analytics has detected you are using the <b>%s</b> Plugin, but are using our Standard integration. We strongly recommend to <b>switch to Cache-Optimized integration</b> in the  <a href="%s">Plugin\'s Advanced Settings</a> for optimal results.', 'scoby_analytics_textdomain'), esc_html($cachePlugin), esc_attr(admin_url('options-general.php?page=scoby-analytics-plugin&tab=advanced'))); ?></p>
+                <p><?php printf(__('Scoby Analytics has detected you are using the <b>%s</b> Plugin, but are using our Standard integration. We strongly recommend to <b>switch to Cache-Optimized integration</b> in the  <a href="%s">Plugin\'s Advanced Settings</a> for optimal results.', 'scoby_analytics_textdomain'), esc_html($cachePlugin), esc_attr(admin_url('options-general.php?page=scoby-analytics-plugin&tab=advanced'))); ?></p>
             </div>
             <?php
             delete_transient('scoby_analytics_use_client_integration');
@@ -111,7 +111,7 @@ if (empty($options['api_key'])) {
 function scoby_analytics_add_action_links($actions)
 {
     $mylinks = array(
-        printf('<a href="%s">Settings</a>', esc_attr(admin_url('options-general.php?page=scoby-analytics-plugin'))),
+        '<a href="' . esc_attr(admin_url('options-general.php?page=scoby-analytics-plugin')) . '">Settings</a>',
     );
     $actions = array_merge($mylinks, $actions);
     return $actions;

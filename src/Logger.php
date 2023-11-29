@@ -14,16 +14,14 @@ class Logger implements LoggerInterface
 
     public function log($level, $message, array $context = []): void
     {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log(
-                sprintf(
-                    '%s: %s. Details: %s',
-                    $level,
-                    trim($message, '.'),
-                    json_encode($context)
-                )
-            );
-        }
+        error_log(
+            sprintf(
+                '%s: %s. Details: %s',
+                $level,
+                trim($message, '.'),
+                json_encode($context)
+            )
+        );
     }
 
     public function alert($message, array $context = []): void

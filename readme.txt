@@ -1,22 +1,28 @@
 === Scoby Analytics ===
 Contributors: scobyio
 Donate link: https://www.scoby.io/
-Tags: traffic statistics, visitor statistics, traffic, stats, statistics, measurement, tracking, analytics, GDPR-compliant, privacy-focused
+Tags: analytics, traffic statistics, visitor statistics, traffic, stats, statistics, measurement, tracking, GDPR-compliant, privacy-focused
 Requires at least: 4.7
-Tested up to: 6.3.2
+Tested up to: 6.4.1
 Stable tag: 2.2.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Scoby Analytics provides meaningful insights about your website's traffic while protecting your visitors' privacy at the same time.
+Scoby Analytics: GDPR-compliant, consent-free insights on your WordPress site, ensuring visitor privacy with server-side data collection.
 
 == Description ==
-Scoby Analytics is a GDPR-compliant, privacy-focused analytics tool that provides valuable insights about your website's traffic without requiring user consent. Our unique features include:
+Scoby Analytics: Advanced, Privacy-Focused Web Analytics
 
-- Server-side measurement: By capturing website usage rather than individual users, we ensure accurate analytics while complying with privacy laws.
-- Consent-free tracking: Scoby Analytics is fully compliant with GDPR and ePrivacy, so you do not require user consent for measurement.
-- Comprehensive analytics: Scoby Analytics captures essential metrics like page views, visitors, time on site, referrers, and session duration.
-- High-level data security: Our company and data centers are based in Germany, ensuring top-notch data protection standards.
+Embrace the next era of web analytics with Scoby Analytics, your GDPR-compliant solution for insightful, consent-free website tracking. Our tool is designed to provide deep insights into your website's traffic while fully respecting user privacy.
+
+Key Features:
+
+- Server-Side Measurement: Unlike traditional analytics tools that track individual users, Scoby Analytics focuses on overall website usage. This approach delivers precise analytics in full compliance with privacy laws, offering a unique balance between data richness and user privacy.
+- Consent-Free Tracking: With Scoby Analytics, navigate the complexities of GDPR and ePrivacy with ease. Our tool's compliance means you're free from the constraints of user consent for tracking, simplifying your analytics process.
+- Comprehensive Data Insights: Gain valuable metrics such as page views, visitor counts, time spent on site, referrer sources, and session durations. These insights are crucial for informed decision-making and website optimization.
+- Unparalleled Data Security: Operating with servers and company headquarters in Germany, Scoby Analytics adheres to stringent European data protection standards. This ensures that your data is not only insightful but also securely handled and stored.
+
+Leverage Scoby Analytics for an ethical, comprehensive, and hassle-free analysis of your website's performance
 
 == Frequently Asked Questions ==
 

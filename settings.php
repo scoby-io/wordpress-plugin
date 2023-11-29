@@ -3,6 +3,7 @@
 if (!defined('ABSPATH')) exit;
 
 use ScobyAnalytics\Helpers;
+use ScobyAnalytics\HttpClient;
 use ScobyAnalytics\IntegrationType;
 use ScobyAnalyticsDeps\Scoby\Analytics\Client;
 
@@ -40,7 +41,7 @@ function scoby_analytics_render_settings_page()
             }
 
             input[name="scoby_analytics_options[salt]"] {
-                width: 450px !important;
+                width: 350px !important;
             }
         </style>
 
@@ -52,11 +53,11 @@ function scoby_analytics_render_settings_page()
                class="nav-tab <?php if (scoby_analytics_get_active_tab() === 'advanced') echo 'nav-tab-active' ?>">Advanced
                 Settings</a>
         </nav>
-        <form action="options.php" method="post">
+        <form id="scoby_analytics_settings_form" action="options.php" method="post">
             <?php
             settings_fields('scoby_analytics_options');
             do_settings_sections('scoby_analytics'); ?>
-            <input name="submit" class="button button-primary" type="submit"
+            <input name="submit_button" class="button button-primary" type="submit"
                    value="<?php esc_attr_e('Save Settings'); ?>"/>
         </form>
     </div>
@@ -93,6 +94,13 @@ function scoby_analytics_options_validate($input)
 {
     $settings = Helpers::getConfig();
 
+    if (!empty($input['reset_api_key'])) {
+        $settings['api_key'] = null;
+    }
+    if (!empty($input['reset_salt'])) {
+        $settings['salt'] = Helpers::generateSalt();
+    }
+
     if (!empty($input['api_key'])) {
 
         $apiKey = trim($input['api_key']);
@@ -110,6 +118,9 @@ function scoby_analytics_options_validate($input)
 
         $client = new Client($apiKey, $salt);
 
+        $httpClient = new HttpClient();
+        $client->setHttpClient($httpClient);
+
         if ($client->testConnection()) {
             $settings['api_key'] = $apiKey;
             $settings['salt'] = $salt;
@@ -120,7 +131,6 @@ function scoby_analytics_options_validate($input)
                 'The API Key you provided is invalid. Please check and try again.',
                 'error'
             );
-            return;
         }
     }
 
@@ -145,18 +155,22 @@ function scoby_analytics_options_validate($input)
     return $settings;
 }
 
-function scoby_analytics_section_text()
-{
-//    echo '<p>Please enter the API Key from your </p>';
-}
+function scoby_analytics_section_text() {}
 
 function scoby_analytics_setting_api_key()
 {
     $options = Helpers::getConfig();
     $apiKey = !empty($options['api_key']) ? $options['api_key'] : "";
-    printf("<input id='scoby_analytics_setting_api_key' name='scoby_analytics_options[api_key]' type='text' value='%s' />", esc_attr($apiKey));
-    echo '<p>Have no API Key yet? Get yours now on <a href="https://analytics.scoby.io" target="_blank">https://analytics.scoby.io</a> and test 30 days for free! 
+    $disabled = !empty($apiKey) ? 'disabled' : '';
+    printf("<input id='scoby_analytics_setting_api_key' name='scoby_analytics_options[api_key]' type='text' value='%s' %s />", \esc_attr($apiKey), \esc_attr($disabled));
+    printf("<input type='hidden' id='scoby_analytics_reset_api_key' name='scoby_analytics_options[reset_api_key]' value=0 />");
+    if(empty($apiKey)) {
+        echo '<p>Have no API Key yet? Get yours now on <a href="https://analytics.scoby.io" target="_blank">https://analytics.scoby.io</a> and test 30 days for free! 
             <br>Free means free like in free beer - no credit card needed, no need to cancel.</p>';
+    } else {
+       printf('<a style="margin-left: 10px" href="javascript:;" onclick="document.getElementById(\'scoby_analytics_reset_api_key\').value=1;document.getElementById(\'scoby_analytics_settings_form\').submit();">reset API Key</a>');
+    }
+
 }
 
 function scoby_analytics_integration_test()
@@ -218,7 +232,7 @@ function scoby_analytics_setting_integration_type()
     } else {
         echo '<p>We did not detect any Cache Plugin such as WP Rocket, Fastest Cache, Super Cache etc), so we assume <br>
                  you can safely use our Standard integration. If you render your pages to a CDN or facilitate some other <br>
-                 cache in front of your wordpress installation, please switch to Cache-Optimized integration.</p>';
+                 cache in front of your wordpress installation, please switch to Cache-Optimized integration and flush your Cache.</p>';
     }
 
 }
@@ -231,7 +245,7 @@ function scoby_analytics_setting_endpoint()
 
     $host = filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    printf('<p>When using Cache-Optimized integration, your traffic is routed through this path. <br>
+    printf('<p>When using Cache-Optimized integration, Scoby Analytics measures page views by calls to this path. <br>
              When this value is set to "foobar", scoby will measure traffic through calls to %s/foobar. <br>
              Scoby automatically chooses a random value to avoid collisions with any of your site\'s URLs.</p>', \esc_html($host));
 }
@@ -239,8 +253,12 @@ function scoby_analytics_setting_endpoint()
 function scoby_analytics_setting_salt()
 {
     $options = Helpers::getConfig();
-    $endpoint = !empty($options['salt']) ? $options['salt'] : Helpers::generateSalt();
-    printf("<input type='text' name='scoby_analytics_options[salt]' value='%s'>", \esc_attr($endpoint));
+    $salt = !empty($options['salt']) ? $options['salt'] : Helpers::generateSalt();
+    $disabled = !empty($salt) ? 'disabled' : '';
+    printf("<input type='text' name='scoby_analytics_options[salt]' value='%s' %s>", \esc_attr($salt), \esc_attr($disabled));
+    printf("<input type='hidden' id='scoby_analytics_reset_salt' name='scoby_analytics_options[reset_salt]' value=0 />");
 
-    echo '<p>This value is used to anonymize sensitive parts of your traffic before it is sent to our servers. <br>You can safely ignore this setting and please do not change it unless you know what your are doing.</p>';
+    printf('<a style="margin-left: 10px" href="javascript:;" onclick="var ok = confirm(\'Generating a new Privacy Salt will affect the unique counts in your dashbaord. Do you want to continue?\'); if(ok) { document.getElementById(\'scoby_analytics_reset_salt\').value=1;document.getElementById(\'scoby_analytics_settings_form\').submit() }">regenerate</a>');
+
+    echo '<p>This value is used to anonymize sensitive parts of your traffic before they are sent to Scoby Analytics\' servers. <br/>You can safely ignore this setting, changing will affect the unique counts in your dashboard. <br/>Please do not share this value with Scoby Analytics support.</p>';
 }
