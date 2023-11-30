@@ -37,11 +37,11 @@ function scoby_analytics_render_settings_page()
 
         <style>
             input[name="scoby_analytics_options[api_key]"] {
-                width: 600px !important;
+                width: 575px !important;
             }
 
             input[name="scoby_analytics_options[salt]"] {
-                width: 350px !important;
+                width: 300px !important;
             }
         </style>
 
@@ -258,7 +258,7 @@ function scoby_analytics_setting_salt()
     printf("<input type='text' name='scoby_analytics_options[salt]' value='%s' %s>", \esc_attr($salt), \esc_attr($disabled));
     printf("<input type='hidden' id='scoby_analytics_reset_salt' name='scoby_analytics_options[reset_salt]' value=0 />");
 
-    printf('<a style="margin-left: 10px" href="javascript:;" onclick="var ok = confirm(\'Generating a new Privacy Salt will affect the unique counts in your dashbaord. Do you want to continue?\'); if(ok) { document.getElementById(\'scoby_analytics_reset_salt\').value=1;document.getElementById(\'scoby_analytics_settings_form\').submit() }">regenerate</a>');
+    printf('<a style="margin-left: 10px" href="javascript:;" onclick="var ok = confirm(\'Generating a new Privacy Salt will affect the unique counts in your dashboard. Are you sure you want to continue?\'); if(ok) { document.getElementById(\'scoby_analytics_reset_salt\').value=1;document.getElementById(\'scoby_analytics_settings_form\').submit() }">regenerate</a>');
 
     echo '<p>This value is used to anonymize sensitive parts of your traffic before they are sent to Scoby Analytics\' servers. <br/>You can safely ignore this setting, changing will affect the unique counts in your dashboard. <br/>Please do not share this value with Scoby Analytics support.</p>';
 }

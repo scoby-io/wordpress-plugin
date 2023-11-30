@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Scoby Analytics
-Description: GDPR- & ePrivacy-compliant, consent-free insights on your WordPress site, ensuring visitor privacy with server-side data collection.
+Description: Scoby Analytics redefines website traffic analysis by exclusively utilizing anonymous data from your web server, prioritizing visitor privacy. This approach ensures full alignment with GDPR, ePrivacy, and Schrems II, offering insightful analytics without the need for visitor consent.
 Version: 2.2.4
 Author: Scoby GmbH
 Author URI: https://www.scoby.io
