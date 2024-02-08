@@ -6,6 +6,8 @@ Version: 2.2.4
 Author: Scoby GmbH
 Author URI: https://www.scoby.io
 Requires PHP: 7.4
+License: GPLv2
+License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 */
 
 if (!defined('ABSPATH')) exit;
@@ -78,8 +80,8 @@ if (empty($options['api_key'])) {
     add_action('admin_notices', function () {
         ?>
 		<div class="notice-warning notice">
-			<p><?php printf(__('Scoby Analytics will measure your traffic, as soon as you have entered your API Key in the <a href="%s">Plugin\'s Settings</a>.', 'scoby_analytics_textdomain'),  admin_url('options-general.php?page=scoby-analytics-plugin')); ?></p>
-		</div>
+            <p><?php printf(\wp_kses(__('Scoby Analytics will measure your traffic, as soon as you have entered your API Key in the <a href="%s">Plugin\'s Settings</a>.', 'scoby_analytics_textdomain'), array('a' => array('href' => array()))), esc_url(admin_url('options-general.php?page=scoby-analytics-plugin'))); ?></p>
+        </div>
         <?php
     });
 } else {
@@ -88,7 +90,7 @@ if (empty($options['api_key'])) {
         if(!empty($cachePlugin)) {
             ?>
             <div class="notice-warning notice">
-                <p><?php printf(__('Scoby Analytics has detected you are using the <b>%s</b> Plugin. Please flush your cache to start measuring.', 'scoby_analytics_textdomain'), esc_html($cachePlugin)); ?></p>
+                <p><?php printf(\wp_kses(__('Scoby Analytics has detected you are using the <b>%s</b> Plugin. Please flush your cache to start measuring.', 'scoby_analytics_textdomain'), array('b' => array())), esc_html($cachePlugin)); ?></p>
             </div>
             <?php
             delete_transient('scoby_analytics_flush_cache_notice');
@@ -100,7 +102,21 @@ if (empty($options['api_key'])) {
         if(!empty($cachePlugin)) {
             ?>
             <div class="notice-warning notice">
-                <p><?php printf(__('Scoby Analytics has detected you are using the <b>%s</b> Plugin, but are using our Standard integration. We strongly recommend to <b>switch to Cache-Optimized integration</b> in the  <a href="%s">Plugin\'s Advanced Settings</a> for optimal results.', 'scoby_analytics_textdomain'), esc_html($cachePlugin), esc_attr(admin_url('options-general.php?page=scoby-analytics-plugin&tab=advanced'))); ?></p>
+                <?php
+                printf(
+                    \wp_kses(
+                        __('Scoby Analytics has detected you are using the <b>%s</b> Plugin, but are using our Standard integration. We strongly recommend to <b>switch to Cache-Optimized integration</b> in the <a href="%s">Plugin\'s Advanced Settings</a> for optimal results.', 'scoby_analytics_textdomain'),
+                        array(
+                            'b' => array(),
+                            'a' => array(
+                                'href' => array(),
+                            ),
+                        )
+                    ),
+                    esc_html($cachePlugin), // Escaping for HTML content
+                    esc_url(admin_url('options-general.php?page=scoby-analytics-plugin&tab=advanced')) // Escaping for URL
+                );
+                ?>
             </div>
             <?php
             delete_transient('scoby_analytics_use_client_integration');

@@ -27,14 +27,14 @@ class Plugin
                     $client->logPageViewAsync();
                 }
             });
-        } else if (!empty($settings['integration_type']) && $settings['integration_type'] === 'CLIENT') {
+        } else if (!empty($settings['proxy_endpoint']) && !empty($settings['integration_type']) && $settings['integration_type'] === 'CLIENT') {
 
-            $proxyEndpoint = \esc_js(!empty($settings['proxy_endpoint']) ? $settings['proxy_endpoint'] : '');
+            $proxyEndpoint = \esc_js(join( "/", [\site_url(), $settings['proxy_endpoint']]));
 
             \add_action('wp_footer', function () use ($proxyEndpoint) {
                 \wp_register_script( 'scoby-analytics', '', [], '', true );
                 \wp_enqueue_script( 'scoby-analytics'  );
-                \wp_add_inline_script('scoby-analytics', 'fetch("/' . $proxyEndpoint . '?" + (Math.random() + 1).toString(36).substring(2), {
+                \wp_add_inline_script('scoby-analytics', 'fetch("' . $proxyEndpoint . '?" + (Math.random() + 1).toString(36).substring(2), {
     method: "POST",
     mode: "same-origin",
     cache: "no-cache",

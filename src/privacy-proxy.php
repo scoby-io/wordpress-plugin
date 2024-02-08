@@ -19,9 +19,9 @@ $proxyEnabled = !empty($settings['integration_type']) && $settings['integration_
 $proxyEndpoint = !empty($settings['proxy_endpoint']) ? "/" . $settings['proxy_endpoint'] : null;
 
 $uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-$path = explode("?", $uri)[0];
+$path = parse_url($uri, PHP_URL_PATH);
 
-if($proxyEnabled === false || $proxyEndpoint === null || $path !== $proxyEndpoint) {
+if($proxyEnabled === false || empty($proxyEndpoint) || substr_compare($path, $proxyEndpoint, -strlen($proxyEndpoint)) !== 0) {
     return;
 }
 
