@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/scobyio/analytics-wp/compare/v2.2.4...v3.0.0) (2024-02-25)
+
+
+### Features
+
+* decouple from guzzle ([7d1a0da](https://github.com/scobyio/analytics-wp/commit/7d1a0da6cbb23010d316a9a01c0154fc703cc566))
+* make plugin downloadable ([7de33bb](https://github.com/scobyio/analytics-wp/commit/7de33bbe3da26157f9af442561cd2693ea9e3737))
+
+
+### Bug Fixes
+
+* do not use HEREDOC, use wp_enqueue commands ([740ad06](https://github.com/scobyio/analytics-wp/commit/740ad0673b51396491eed8234207042b3487d467))
+* filter input, escape output properly ([6ce0330](https://github.com/scobyio/analytics-wp/commit/6ce03304a44163340fc28711e0d7108df4ecb1dd))
+* handle remarks from WordPress reviewers ([8d42c8b](https://github.com/scobyio/analytics-wp/commit/8d42c8b8152a0ed832c418723253d49b148e5c42))
+* prevent direct file access, adjust prefixes where needed ([f45912b](https://github.com/scobyio/analytics-wp/commit/f45912bc1043c2a6dcc15fbd577723b046d207ea))
+* various stupid bugs ([d2417a0](https://github.com/scobyio/analytics-wp/commit/d2417a0f071d175ffb86bddc572aac74ba2a56d6))
+
 ### [2.2.4](https://github.com/scobyio/analytics-wp/compare/v2.2.3...v2.2.4) (2023-10-21)
 
 
