@@ -1,20 +1,19 @@
-=== Scoby Analytics: Empowering Privacy in Web Analytics ===
+=== Scoby Analytics ===
 Contributors: scobyio
 Donate link: https://www.scoby.io/
-Tags: analytics, traffic statistics, visitor statistics, traffic, stats, statistics, measurement, tracking, GDPR-compliant, privacy-focused
+Tags: analytics, privacy, statistics, pageviews, stats
 Requires at least: 5.3
 Tested up to: 6.4.1
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-
-Scoby Analytics is a GDPR-compliant, consent-free web analytics tool designed for the privacy-conscious. With server-side data collection, Scoby Analytics ensures complete visitor privacy while providing insightful analytics.
+Scoby Analytics: GDPR-compliant, consent-free insights on your WordPress site, ensuring visitor privacy with server-side data collection.
 
 == Description ==
 **Scoby Analytics: Advanced, Privacy-Focused Web Analytics**
 
-Join the next era of web analytics with Scoby Analytics. Our tool is built for comprehensive, consent-free website tracking that respects user privacy, in full compliance with GDPR.
+Embrace the next era of web analytics with Scoby Analytics, your GDPR-compliant solution for insightful, consent-free website tracking. Our tool is designed to provide deep insights into your website's traffic while fully respecting user privacy.
 
 **Key Features:**
 - **Server-Side Measurement**: Delivers precise analytics without tracking individual users. Complies with privacy laws while offering data richness.
@@ -26,29 +25,32 @@ Use Scoby Analytics for ethical, comprehensive, and hassle-free website performa
 
 == Frequently Asked Questions ==
 
-1. **Why choose Scoby Analytics?**
-   Scoby Analytics offers a privacy-friendly alternative to traditional tools, collecting anonymized data without cookie consent requirements.
+= Why choose Scoby Analytics? =
+Scoby Analytics is your privacy-friendly alternative to traditional analytics tools. We collect anonymized website usage data without accessing your visitors' devices, eliminating the need for cookie consent.
 
-2. **Can Scoby Analytics measure conversions?**
-   Yes. Measure conversions using Goals associated with specific URL patterns, aggregated into a single metric.
+= Can Scoby Analytics measure conversions? =
+Yes. You can measure conversions by setting Goals within Scoby. Goals are typically associated with specific URL patterns. All conversions are aggregated into a single metric.
 
-3. **Can I segment visitors?**
-   Absolutely! Segment visitors based on anonymous traits for refined analytics reporting.
+= Can Scoby Analytics measure soft conversions? =
+Scoby's server-side analytics don't support rule-based conversions traditionally measured on the client side. However, we're open to discuss your specific requirements for implementing suitable goals.
 
-4. **Does Scoby Analytics track button clicks or mouse movements?**
-   No. To maintain privacy, Scoby Analytics does not access visitors’ browsers, focusing instead on anonymized, aggregated data.
+= Does Scoby Analytics enable visitor segmentation? =
+Yes, you can segment your visitors based on anonymous traits like "Women", "35-50 years old", "Subscribers", allowing you to filter these groups in your analytics reports.
 
-5. **Integration with Reporting Tools?**
-   Yes. Scoby is compatible with tools like Looker Studio and PowerBI through connectors and .xlsx exports.
+= Can Scoby Analytics measure button clicks or mouse movements? =
+No. To preserve visitor privacy, Scoby Analytics doesn’t access your visitors’ browsers. Such activities would require visitor consent.
 
-6. **What visibility does Scoby provide?**
-   Complete visibility of all page views, with 100% measurement of website traffic, sans cookie consent.
+= Can I use Scoby data in other reporting tools like Looker Studio or PowerBI? =
+Yes. As an official Looker Studio Partner, we provide a Connector for integrating Scoby Analytics data into Looker Studio. Additionally, our Reporting Center supports .xlsx exports, making it compatible with PowerBI and Tableau.
 
-7. **Is Scoby sufficient as a standalone tool?**
-   Depending on your needs, Scoby can function solo or alongside other tools.
+= What will I see when using Scoby Analytics? =
+With Scoby, you gain complete visibility of all page views. We guarantee to capture every page view, enabling 100% measurement of your website traffic - all without needing cookie consent.
 
-8. **What is the "Other" dimension in the Dashboard?**
-   The "Other" bucket ensures privacy, grouping results with less than 25 visitors to maintain anonymity.
+= Do I need multiple tools (e.g., Google Analytics and Scoby) for a comprehensive view? =
+Scoby Analytics anonymizes and measures all your website traffic, providing insights into overall movement patterns. However, individual user journeys aren't reported to ensure privacy. Depending on your needs, Scoby could be used as a standalone tool or in conjunction with others.
+
+= What does the "Other" dimension in the Dashboard signify? =
+The "Other" bucket is part of Scoby's unique privacy-preserving technology. We use a k-Anonymity of 25 for all analytical queries, meaning that results with less than 25 visitors are grouped into the "Other" bucket to ensure visitor privacy.
 
 == Screenshots ==
 1. Scoby Analytics Dashboard: Your window to comprehensive metrics.
@@ -78,7 +80,7 @@ Terms of Use: https://www.scoby.io/terms
 Privacy Policy: https://www.scoby.io/privacy
 
 == Changelog ==
-= v3.0.2 =
+= v3.0.3 =
 * Major refactoring.
 
 = v2.4.0 =
