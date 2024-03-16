@@ -12,7 +12,7 @@ class Plugin
 
         if (!empty($settings['integration_type']) && $settings['integration_type'] === 'SERVER') {
             \add_action('wp_footer', function () use ($settings) {
-                if (!empty($settings['api_key'])) {
+                if (!empty($settings['api_key']) && !\is_404()) {
                     $apiKey = $settings['api_key'];
                     $salt = $settings['salt'];
                     $client = new Client($apiKey, $salt);
@@ -29,12 +29,13 @@ class Plugin
             });
         } else if (!empty($settings['proxy_endpoint']) && !empty($settings['integration_type']) && $settings['integration_type'] === 'CLIENT') {
 
-            $proxyEndpoint = \esc_js(join( "/", [\site_url(), $settings['proxy_endpoint']]));
+            $proxyEndpoint = \esc_js(join("/", [\site_url(), $settings['proxy_endpoint']]));
 
             \add_action('wp_footer', function () use ($proxyEndpoint) {
-                \wp_register_script( 'scoby-analytics', '', [], '', true );
-                \wp_enqueue_script( 'scoby-analytics'  );
-                \wp_add_inline_script('scoby-analytics', 'fetch("' . $proxyEndpoint . '?" + (Math.random() + 1).toString(36).substring(2), {
+                if (!\is_404()) {
+                    \wp_register_script('scoby-analytics', '', [], '', true);
+                    \wp_enqueue_script('scoby-analytics');
+                    \wp_add_inline_script('scoby-analytics', 'fetch("' . $proxyEndpoint . '?" + (Math.random() + 1).toString(36).substring(2), {
     method: "POST",
     mode: "same-origin",
     cache: "no-cache",
@@ -45,6 +46,7 @@ class Plugin
         ref: document.referrer
     })
 }).catch(console.log);');
+                }
             });
         }
     }
