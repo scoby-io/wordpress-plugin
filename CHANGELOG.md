@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/scobyio/analytics-wp/compare/v3.0.1...v3.1.0) (2024-03-17)
+
+
+### Features
+
+* add setup assistant ([f25f0d0](https://github.com/scobyio/analytics-wp/commit/f25f0d02791090aee8c42edd330882c81785c1f1))
+* skip tracking of non-existing pages ([883eaa2](https://github.com/scobyio/analytics-wp/commit/883eaa29edb27f9708fdc09a9bfdfacfbf3cb636))
+
 ### [3.0.5](https://github.com/scobyio/analytics-wp/compare/v3.0.1...v3.0.5) (2024-02-26)
 
 ### [3.0.4](https://github.com/scobyio/analytics-wp/compare/v3.0.1...v3.0.4) (2024-02-26)
