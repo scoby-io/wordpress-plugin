@@ -80,7 +80,10 @@ Terms of Use: https://www.scoby.io/terms
 Privacy Policy: https://www.scoby.io/privacy
 
 == Changelog ==
-= v3.0.3 =
+= v3.1.0 =
+* Add Setup Assistant
+
+= v3.0.5 =
 * Major refactoring.
 
 = v2.4.0 =
