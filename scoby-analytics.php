@@ -76,15 +76,40 @@ if (!wp_installing()) {
 }
 
 $options = Helpers::getConfig();
+//Helpers::resetConfig();
+//Helpers::autoConfigure();
 if (empty($options['api_key'])) {
-    add_action('admin_notices', function () {
-        ?>
-		<div class="notice-warning notice">
-            <p><?php printf(\wp_kses(__('Scoby Analytics will measure your traffic, as soon as you have entered your API Key in the <a href="%s">Plugin\'s Settings</a>.', 'scoby_analytics_textdomain'), array('a' => array('href' => array()))), esc_url(admin_url('options-general.php?page=scoby-analytics-plugin'))); ?></p>
-        </div>
-        <?php
-    });
+    if (Helpers::setupInProgress($options)) {
+        add_action('admin_notices', function () use ($options) {
+            ?>
+            <div class="notice-warning notice">
+                <p><?php printf(\wp_kses(__('Scoby Analytics has sent a setup code to %s, please enter this code in the <a href="%s">Plugin\'s Settings</a>.', 'scoby_analytics_textdomain'), array('a' => array('href' => array()))), $options['setup_email'], esc_url(admin_url('options-general.php?page=scoby-analytics-plugin'))); ?></p>
+            </div>
+            <?php
+        });
+    } else {
+        add_action('admin_notices', function () {
+            ?>
+            <div class="notice-warning notice">
+                <p><?php printf(\wp_kses(__('Scoby Analytics will start measuring your traffic, as soon as you complete setup in the <a href="%s">Plugin\'s Settings</a>.', 'scoby_analytics_textdomain'), array('a' => array('href' => array()))), esc_url(admin_url('options-general.php?page=scoby-analytics-plugin'))); ?></p>
+            </div>
+            <?php
+        });
+    }
+
 } else {
+    if (Helpers::setupComplete($options)) {
+        $options = Helpers::resetSetup($options);
+        Helpers::setConfig($options);
+        add_action('admin_notices', function () {
+            ?>
+            <div class="notice-success notice">
+                <p><?php printf(\__('Scoby Analytics setup is complete! Your traffic data will start appearing in your Dashboard shortly.', 'scoby_analytics_textdomain')); ?></p>
+            </div>
+            <?php
+        });
+    }
+
     add_action('admin_notices', function () {
         $cachePlugin = get_transient('scoby_analytics_flush_cache_notice');
         if(!empty($cachePlugin)) {

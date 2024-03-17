@@ -10,22 +10,48 @@ use ScobyAnalyticsDeps\Scoby\Analytics\Client;
 require_once __DIR__ . '/deps/scoper-autoload.php';
 require_once __DIR__ . '/vendor/autoload.php';
 
+function initialize_settings_page()
+{
+
+}
+
 function scoby_analytics_add_settings_page()
 {
-    add_options_page('Scoby Analytics', 'Scoby Analytics', 'manage_options', 'scoby-analytics-plugin', 'scoby_analytics_render_settings_page');
+    $options = Helpers::getConfig();
+    if (!empty($options['api_key']) || !empty(scoby_analytics_get_active_tab())) {
+        add_options_page('Scoby Analytics', 'Scoby Analytics', 'manage_options', 'scoby-analytics-plugin', 'scoby_analytics_render_settings_page');
+    } else {
+        add_options_page('Scoby Analytics', 'Scoby Analytics', 'manage_options', 'scoby-analytics-plugin', 'scoby_analytics_render_setup_page');
+    }
 }
 
 add_action('admin_menu', 'scoby_analytics_add_settings_page');
 
 
 add_action('admin_menu', function () {
-    add_menu_page('Scoby Analytics', 'Scoby Analytics', 'manage_options', 'scoby-analytics-plugin', 'scoby_analytics_render_settings_page', 'dashicons-chart-bar');
+
+    $options = Helpers::getConfig();
+    if (!empty($options['api_key']) || !empty(scoby_analytics_get_active_tab())) {
+        add_menu_page('Scoby Analytics', 'Scoby Analytics', 'manage_options', 'scoby-analytics-plugin', 'scoby_analytics_render_settings_page', 'dashicons-chart-bar');
+    } else {
+        add_menu_page('Scoby Analytics', 'Scoby Analytics', 'manage_options', 'scoby-analytics-plugin', 'scoby_analytics_render_setup_page', 'dashicons-chart-bar');
+    }
 });
 
 function scoby_analytics_get_active_tab()
 {
     if (!empty($_GET['tab'])) {
         return filter_var($_GET['tab'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
+}
+
+function scoby_analytics_render_setup_page()
+{
+    $settings = Helpers::getConfig();
+    if(Helpers::setupInProgress($settings)) {
+        scoby_analytics_setup_verify_page();
+    } else {
+        scoby_analytics_setup_initialize_page();
     }
 }
 
@@ -47,8 +73,8 @@ function scoby_analytics_render_settings_page()
 
 
         <nav class="nav-tab-wrapper">
-            <a href="?page=scoby-analytics-plugin"
-               class="nav-tab <?php if (empty(scoby_analytics_get_active_tab())) echo 'nav-tab-active' ?>">General</a>
+            <a href="?page=scoby-analytics-plugin&tab=basic"
+               class="nav-tab <?php if (empty(scoby_analytics_get_active_tab()) || scoby_analytics_get_active_tab() === 'basic') echo 'nav-tab-active' ?>">General</a>
             <a href="?page=scoby-analytics-plugin&tab=advanced"
                class="nav-tab <?php if (scoby_analytics_get_active_tab() === 'advanced') echo 'nav-tab-active' ?>">Advanced
                 Settings</a>
@@ -59,6 +85,230 @@ function scoby_analytics_render_settings_page()
             do_settings_sections('scoby_analytics'); ?>
             <input name="submit_button" class="button button-primary" type="submit"
                    value="<?php esc_attr_e('Save Settings'); ?>"/>
+            <a href="https://analytics.scoby.io" target="_blank" name="submit_button" class="button button-primary"><?php esc_attr_e('Go to Dashboard'); ?></a>
+        </form>
+    </div>
+    <?php
+}
+
+function scoby_analytics_setup_initialize_page()
+{
+    ?>
+    <style>
+        .scoby_analytics_icon {
+            width: 64px !important;
+            height: 64px !important;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 12px;
+        }
+
+        .scoby_analytics_setup_section {
+
+            margin-top: 150px;
+            text-align: center;
+            width: 66%;
+            margin-right: auto;
+            margin-left: auto;
+            /*background: red;*/
+
+        }
+
+        .scoby_analytics_setup_head {
+
+            font-weight: bold;
+            font-size: large;
+            margin-bottom: 16px;
+            color: #454545;
+
+        }
+
+        .scoby_analytics_setup_body {
+
+            font-size: medium;
+            margin-bottom: 16px;
+            line-height: 24px;
+            color: #666;
+
+        }
+
+        .scoby_analytics_setup_lower_body {
+
+            font-size: normal;
+            margin-bottom: 12px;
+            margin-top: 16px;
+            line-height: 16px;
+            color: #676767;
+            display: block;
+            width: 70%;
+            margin-right: auto;
+            margin-left: auto;
+
+        }
+
+        .scoby_analytics_setup_skip_link {
+            font-size: normal;
+        }
+
+        .scoby_analytics_setup_button {
+            font-size: medium !important;
+        }
+
+        input[name="scoby_analytics_options[salt]"] {
+            width: 300px !important;
+        }
+    </style>
+    <div class="wrap">
+        <h1>Scoby Analytics</h1>
+
+        <div class="scoby_analytics_setup_section">
+            <div class="scoby_analytics_icon">
+                <svg data-slot="icon" aria-hidden="true" fill="none" stroke-width="1.5" stroke="currentColor"
+                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z"
+                          stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div class="scoby_analytics_setup_head">Ready to get started?</div>
+            <div class="scoby_analytics_setup_body">
+                Click the button below to start measuring your traffic the right way with Scoby Analytics - <b>It's free
+                    for private websites, non-profit and open-source projects</b> and Commercial projects enjoy all
+                features risk-free for 30 days, no credit card required and no need to cancel.
+            </div>
+            <form id="scoby_analytics_setup_form" action="options.php" method="post">
+                <?php
+                settings_fields('scoby_analytics_options');
+                ?>
+                <input name="submit_button" class="button button-primary scoby_analytics_setup_button" type="submit"
+                       value="<?php esc_attr_e('Connect ' . get_bloginfo('name') . ' to Scoby Analytics'); ?>"/>
+
+                <input type='hidden' name="scoby_analytics_options[setup]"
+                       value="initialize"/>
+                <input type='hidden' name="scoby_analytics_options[name]"
+                       value="<?php esc_attr_e(get_bloginfo('name')); ?>"/>
+                <input type='hidden' name="scoby_analytics_options[email]"
+                       value="<?php esc_attr_e(wp_get_current_user()->user_email); ?>"/>
+            </form>
+
+            <!--            <input type='text' placeholder='Enter your setup code' class="scoby_analytics_setup_button" />-->
+            <!--            <input name="submit_button" class="button button-primary" style="margin-top: 2px" type="button" value="OK"/>-->
+
+            <div class="scoby_analytics_setup_lower_body">
+                <a href="?page=scoby-analytics-plugin&tab=basic" class="scoby_analytics_setup_skip_link">
+                    Click here if you already have a License Key
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <?php
+}
+function scoby_analytics_setup_verify_page()
+{
+    $settings = Helpers::getConfig();
+    ?>
+    <style>
+        .scoby_analytics_icon {
+            width: 64px !important;
+            height: 64px !important;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 12px;
+        }
+
+        .scoby_analytics_setup_section {
+
+            margin-top: 150px;
+            text-align: center;
+            width: 66%;
+            margin-right: auto;
+            margin-left: auto;
+            /*background: red;*/
+
+        }
+
+        .scoby_analytics_setup_head {
+
+            font-weight: bold;
+            font-size: large;
+            margin-bottom: 16px;
+            color: #454545;
+
+        }
+
+        .scoby_analytics_setup_body {
+
+            font-size: medium;
+            margin-bottom: 16px;
+            line-height: 24px;
+            color: #666;
+
+        }
+
+        .scoby_analytics_setup_lower_body {
+
+            font-size: normal;
+            margin-bottom: 12px;
+            margin-top: 16px;
+            line-height: 16px;
+            color: #676767;
+            display: block;
+            width: 70%;
+            margin-right: auto;
+            margin-left: auto;
+
+        }
+
+        .scoby_analytics_setup_skip_link {
+            font-size: normal;
+        }
+
+        .scoby_analytics_setup_button {
+            font-size: medium !important;
+        }
+
+        input[name="scoby_analytics_options[salt]"] {
+            width: 300px !important;
+        }
+    </style>
+    <div class="wrap">
+        <h1>Scoby Analytics</h1>
+
+        <div class="scoby_analytics_setup_section">
+            <div class="scoby_analytics_icon">
+                <svg data-slot="icon" aria-hidden="true" fill="none" stroke-width="1.5" stroke="currentColor"
+                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z"
+                          stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div class="scoby_analytics_setup_head">Check your Inbox!</div>
+            <div class="scoby_analytics_setup_body">
+                We have sent a setup code to <?php esc_attr_e($settings['setup_email']); ?>. <br/>
+                Enter this code and click "OK" to finalize setup.
+            </div>
+            <form id="scoby_analytics_setup_form" action="options.php" method="post">
+                <?php
+                settings_fields('scoby_analytics_options');
+                ?>
+                <input type='text' placeholder='Enter your setup code' class="scoby_analytics_setup_button" name="scoby_analytics_options[token]" />
+                <input type='hidden' name="scoby_analytics_options[code]" value="<?php esc_attr_e($settings['setup_code']); ?>"/>
+                <input type='hidden' name="scoby_analytics_options[setup]" value="verify"/>
+                <input name="submit_button" class="button button-primary" style="margin-top: 2px" type="submit" value="OK"/>
+            </form>
+
+            <form id="scoby_analytics_setup_reset_form" action="options.php" method="post">
+                <?php
+                settings_fields('scoby_analytics_options');
+                ?>
+                <input type='hidden' name="scoby_analytics_options[setup]" value="reset"/>
+                <div class="scoby_analytics_setup_lower_body">
+                    <a href="javascript:;" onclick="document.getElementById('scoby_analytics_setup_reset_form').submit()" class="scoby_analytics_setup_skip_link">
+                        Click here to start again
+                    </a>
+                </div>
+            </form>
+
         </form>
     </div>
     <?php
@@ -68,8 +318,7 @@ function scoby_analytics_register_settings()
 {
     register_setting('scoby_analytics_options', 'scoby_analytics_options', 'scoby_analytics_options_validate');
     add_settings_section('scoby_analytics_settings', 'General Settings', 'scoby_analytics_section_text', 'scoby_analytics');
-
-    add_settings_field('scoby_analytics_setting_api_key', 'API Key', 'scoby_analytics_setting_api_key', 'scoby_analytics', 'scoby_analytics_settings');
+    add_settings_field('scoby_analytics_setting_api_key', 'License Key', 'scoby_analytics_setting_api_key', 'scoby_analytics', 'scoby_analytics_settings');
 }
 
 function scoby_analytics_register_advanced_settings()
@@ -85,14 +334,94 @@ function scoby_analytics_register_advanced_settings()
 
 if (scoby_analytics_get_active_tab() === 'advanced') {
     add_action('admin_init', 'scoby_analytics_register_advanced_settings');
+} elseif (scoby_analytics_get_active_tab() === 'basic') {
+    // manually add license key
+    add_action('admin_init', 'scoby_analytics_register_settings');
 } else {
     add_action('admin_init', 'scoby_analytics_register_settings');
+}
+
+function post($url, $data) {
+    $body = wp_json_encode($data);
+
+    $response = wp_remote_post($url, [
+        'body' => $body,
+        'headers' => [
+            'Content-Type' => 'application/json',
+        ],
+        'timeout' => 60,
+        'redirection' => 5,
+        'blocking' => true,
+        'httpversion' => '1.0',
+        'sslverify' => false,
+        'data_format' => 'body',
+    ]);
+
+    return  json_decode(wp_remote_retrieve_body($response), true);
+}
+
+function scoby_analytics_setup_validate($input)
+{
+    $settings = [];
+    if($input['setup'] === 'initialize' ) {
+        $data = post('https://api.scoby.io/setup/initialize', [
+            'email' => $input['email'],
+            'name' => $input['name'],
+        ]);
+
+        if(!empty($data['code'])) {
+            $settings['setup_in_progress'] = true;
+            $settings['setup_code'] = $data['code'];
+            $settings['setup_email'] = $input['email'];
+            $settings['setup_expires'] = time() + (15*60);
+            $settings['setup'] = 'verify';
+        } else {
+            add_settings_error(
+                'scoby_analytics_setup_general',
+                esc_attr('settings_updated'),
+                'Something went wrong. Please try again or check how to setup Scoby Analytics manually using our <a href="https://docs.scoby.io/getting-started/create-workspace" target="_blank">Documentation</a>',
+                'error'
+            );
+        }
+
+    } elseif($input['setup'] === 'verify' && !empty($input['token']) ) {
+
+        $data = post('https://api.scoby.io/setup/verify', [
+            'code' => $input['code'],
+            'token' => $input['token'],
+        ]);
+
+        if(!$data['apiKey']) {
+            add_settings_error(
+                'scoby_analytics_setup_general',
+                esc_attr('settings_updated'),
+                'The code you have entered is not correct.',
+                'error'
+            );
+        } else {
+            $settings = Helpers::resetSetup($settings);
+            $settings['api_key'] = $data['apiKey'];
+        }
+    }
+
+    return $settings;
 }
 
 
 function scoby_analytics_options_validate($input)
 {
+    $setupSettings = scoby_analytics_setup_validate($input);
+    // if newly generated app
+    if(!empty($setupSettings['api_key'])) {
+        $input['api_key'] = $setupSettings['api_key'];
+    }
+
     $settings = Helpers::getConfig();
+    $settings = array_merge($settings, $setupSettings);
+
+    if($input['setup'] === 'reset' ) {
+        $settings = Helpers::resetSetup($settings);
+    }
 
     if (!empty($input['reset_api_key'])) {
         $settings['api_key'] = null;
@@ -103,6 +432,10 @@ function scoby_analytics_options_validate($input)
 
     if (!empty($input['api_key'])) {
 
+        if (empty($settings['salt'])) {
+            $settings['salt'] = Helpers::generateSalt();
+        }
+
         $apiKey = trim($input['api_key']);
         $salt = $settings['salt'];
 
@@ -110,7 +443,7 @@ function scoby_analytics_options_validate($input)
             add_settings_error(
                 'scoby_analytics_options_api_key',
                 esc_attr('settings_updated'),
-                'The API Key can not be empty.',
+                'The License Key can not be empty.',
                 'error'
             );
             return;
@@ -124,11 +457,17 @@ function scoby_analytics_options_validate($input)
         if ($client->testConnection()) {
             $settings['api_key'] = $apiKey;
             $settings['salt'] = $salt;
+
+            if(Helpers::setupInProgress($settings)) {
+                $settings = Helpers::resetSetup($settings);
+                $settings['setup'] = "complete";
+            }
+
         } else {
             add_settings_error(
                 'scoby_analytics_options_api_key',
                 esc_attr('settings_updated'),
-                'The API Key you provided is invalid. Please check and try again.',
+                'The License Key you provided is invalid. Please check and try again.',
                 'error'
             );
         }
@@ -155,7 +494,9 @@ function scoby_analytics_options_validate($input)
     return $settings;
 }
 
-function scoby_analytics_section_text() {}
+function scoby_analytics_section_text()
+{
+}
 
 function scoby_analytics_setting_api_key()
 {
@@ -164,11 +505,11 @@ function scoby_analytics_setting_api_key()
     $disabled = !empty($apiKey) ? 'disabled' : '';
     printf("<input id='scoby_analytics_setting_api_key' name='scoby_analytics_options[api_key]' type='text' value='%s' %s />", \esc_attr($apiKey), \esc_attr($disabled));
     printf("<input type='hidden' id='scoby_analytics_reset_api_key' name='scoby_analytics_options[reset_api_key]' value=0 />");
-    if(empty($apiKey)) {
-        echo '<p>Have no API Key yet? Get yours now on <a href="https://analytics.scoby.io" target="_blank">https://analytics.scoby.io</a> and test 30 days for free! 
+    if (empty($apiKey)) {
+        echo '<p>Have no License Key yet? Follow our <a href="https://docs.scoby.io/getting-started/create-workspace" target="_blank">Getting Started guide</a> and test 30 days for free! 
             <br>Free means free like in free beer - no credit card needed, no need to cancel.</p>';
     } else {
-       printf('<a style="margin-left: 10px" href="javascript:;" onclick="document.getElementById(\'scoby_analytics_reset_api_key\').value=1;document.getElementById(\'scoby_analytics_settings_form\').submit();">reset API Key</a>');
+        printf('<a style="margin-left: 10px" href="javascript:;" onclick="document.getElementById(\'scoby_analytics_reset_api_key\').value=1;document.getElementById(\'scoby_analytics_settings_form\').submit();">reset License Key</a>');
     }
 
 }

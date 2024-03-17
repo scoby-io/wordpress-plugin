@@ -65,6 +65,6 @@ class Plugin
     public function deactivate()
     {
         \ScobyAnalytics\Helpers::uninstallPrivacyProxy();
-        \ScobyAnalytics\Helpers::resetConfig();
+//        \ScobyAnalytics\Helpers::resetConfig();
     }
 }

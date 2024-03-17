@@ -146,4 +146,46 @@ class Helpers {
         $data = json_decode($packageJson, true);
         return $data['version'];
     }
+
+    public static function setupInProgress($settings) {
+        if(!empty($settings['setup_in_progress'])) {
+            if($settings['setup_expires'] > time() && $settings['setup'] === 'verify') {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static function setupComplete($settings) {
+        if(!empty($settings['setup']) && $settings['setup'] === 'complete') {
+                return true;
+        }
+        return false;
+    }
+    public static function maybeCleanupSetup($settings) {
+        // clean up?
+        if(!empty($settings['setup_in_progress'])) {
+            if($settings['setup_expires'] > time()) {
+                $settings = self::resetSetup($settings);
+            }
+        }
+        return $settings;
+    }
+    public static function resetSetup($settings) {
+        if(!empty($settings['setup_code'] )) {
+            $settings['setup_code'] = null;
+        }
+        if(!empty($settings['setup_email'] )) {
+            $settings['setup_email'] = null;
+        }
+        if(!empty($settings['setup_started'] )) {
+            $settings['setup_started'] = null;
+        }
+        if(!empty($settings['setup'] )) {
+            $settings['setup'] = null;
+        }
+        if(!empty($settings['setup_in_progress'] )) {
+            $settings['setup_in_progress'] = null;
+        }
+        return $settings;
+    }
 }
