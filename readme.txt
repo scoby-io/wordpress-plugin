@@ -3,7 +3,7 @@ Contributors: scobyio
 Donate link: https://www.scoby.io/
 Tags: analytics, privacy, statistics, pageviews, stats
 Requires at least: 5.3
-Tested up to: 6.4.1
+Tested up to: 6.5
 Stable tag: 3.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -81,7 +81,7 @@ Privacy Policy: https://www.scoby.io/privacy
 
 == Changelog ==
 = v3.1.0 =
-* Add Setup Assistant
+* Add Setup Assistantcd .
 
 = v3.0.5 =
 * Major refactoring.

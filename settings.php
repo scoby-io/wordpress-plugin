@@ -188,6 +188,15 @@ function scoby_analytics_setup_initialize_page()
                        value="<?php esc_attr_e(get_bloginfo('name')); ?>"/>
                 <input type='hidden' name="scoby_analytics_options[email]"
                        value="<?php esc_attr_e(wp_get_current_user()->user_email); ?>"/>
+                <script type="application/javascript">
+                    (() => {
+                        const input = document.createElement("input");
+                        input.setAttribute("type", "hidden");
+                        input.setAttribute("name", "scoby_analytics_options[timezone]");
+                        input.setAttribute("value",  Intl.DateTimeFormat().resolvedOptions().timeZone);
+                        document.getElementById('scoby_analytics_setup_form').appendChild(input);
+                    })();
+                </script>
             </form>
 
             <!--            <input type='text' placeholder='Enter your setup code' class="scoby_analytics_setup_button" />-->
@@ -364,9 +373,10 @@ function scoby_analytics_setup_validate($input)
 {
     $settings = [];
     if($input['setup'] === 'initialize' ) {
-        $data = post('https://api.scoby.io/setup/initialize', [
+        $data = post('https://api.scoby.io/v2/setup/initialize', [
             'email' => $input['email'],
             'name' => $input['name'],
+            'timezone' => $input['timezone'],
         ]);
 
         if(!empty($data['code'])) {
@@ -386,7 +396,7 @@ function scoby_analytics_setup_validate($input)
 
     } elseif($input['setup'] === 'verify' && !empty($input['token']) ) {
 
-        $data = post('https://api.scoby.io/setup/verify', [
+        $data = post('https://api.scoby.io/v2/setup/verify', [
             'code' => $input['code'],
             'token' => $input['token'],
         ]);
