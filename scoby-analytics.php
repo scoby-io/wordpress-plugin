@@ -2,7 +2,7 @@
 /*
 Plugin Name: Scoby Analytics
 Description: Scoby Analytics redefines website traffic analysis by exclusively utilizing anonymous data from your web server, prioritizing visitor privacy. This approach ensures full alignment with GDPR, ePrivacy, and Schrems II, offering insightful analytics without the need for visitor consent.
-Version: 3.2.0
+Version: 3.2.1
 Author: Scoby GmbH
 Author URI: https://www.scoby.io
 Requires PHP: 7.4

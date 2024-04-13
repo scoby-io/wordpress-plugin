@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.1](https://github.com/scobyio/analytics-wp/compare/v3.0.1...v3.2.1) (2024-04-13)
+
+
+### Features
+
+* add setup assistant ([f25f0d0](https://github.com/scobyio/analytics-wp/commit/f25f0d02791090aee8c42edd330882c81785c1f1))
+* add timezone ([e50c74c](https://github.com/scobyio/analytics-wp/commit/e50c74c6696ed8e9181021c4190c61a0a7e02300))
+* skip tracking of non-existing pages ([883eaa2](https://github.com/scobyio/analytics-wp/commit/883eaa29edb27f9708fdc09a9bfdfacfbf3cb636))
+
 ## [3.2.0](https://github.com/scobyio/analytics-wp/compare/v3.0.1...v3.2.0) (2024-04-04)
 
 
