@@ -401,7 +401,7 @@ function scoby_analytics_setup_validate($input)
             'token' => $input['token'],
         ]);
 
-        if(!$data['apiKey']) {
+        if(empty($data['apiKey'])) {
             add_settings_error(
                 'scoby_analytics_setup_general',
                 esc_attr('settings_updated'),
