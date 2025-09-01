@@ -4,7 +4,7 @@ Donate link: https://www.scoby.io/
 Tags: analytics, privacy, statistics, pageviews, stats,
 Requires at least: 5.3
 Tested up to: 6.8.2
-Stable tag: 3.2.3
+Stable tag: 3.2.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -106,6 +106,21 @@ Visit our documentation at [https://docs.scoby.io](https://docs.scoby.io) or con
 Enhance your WordPress site with Scoby Analytics and navigate the complexities of web analytics with ease, all while ensuring complete respect for user privacy.
 
 == Changelog ==
+
+= v3.2.4 =
+
+Release date: 2025-09-01
+
+Version 3.2.4 includes fixes and improvements for a better user experience.
+
+#### Enhancements
+
+* Improve Readme for better user experience
+* Upgrade dependencies ot latest version
+
+#### Other
+
+* Sets the WordPress tested up to version to 6.8.2
 
 = v3.2.1 =
 
