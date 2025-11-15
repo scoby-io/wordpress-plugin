@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/scobyio/analytics-wp#readme",
   "dependencies": {
-    "@wordpress/scripts": "^24.4.0",
+    "@wordpress/scripts": "^31.0.0",
     "standard-version": "^9.5.0"
   },
   "files": [
